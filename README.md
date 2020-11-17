@@ -41,3 +41,8 @@ The scipt calls separate PGLS scripts, one for each model:
 ## 5. Bayesian ordinal phylogenetic regression
 This runs the analysis comparing. Shown here for the interaural canal (IAC) only
 > "brms phylogenetic.R"
+
+## 6. Intrac-class correlation coefficient for measurement repeatability
+"All ICC.csv" - data file
+"ICC_.R" - runs and plots the ICC 
+
