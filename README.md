@@ -2,7 +2,7 @@
 
 ## 1. Data files
 There are 3 data files:  
-Main dataframe (csv):  "data nov 17.csv"    
+Main dataframe (csv):  "data Nov 17.csv"    
 Phylogeny (TREE file):  "JZ tree Prum merged hackett.tree"  
 Dive depth data (csv):  "Depth list_MC2_PGR_JZ_RP suggestions remove less than 0p5, rem allealle,corm.csv"  
 
