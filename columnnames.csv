@@ -1,0 +1,37 @@
+Column,Description
+Binomial,Species name
+Skull.width..mm.,Skull width
+Head.mass..g.,Head mass
+Umbo_distancetoTMplane,Height of eardrum (umbo tip to base plane of eardrum)
+fluid.filled.,Whether the cranial air was remove from the analysis due to presence of large amount of 'seepage' of bodily fluid in the air space
+totalEClength,Extrastapedius length
+Behind.TM,Cranial air volume behind tympanic membrane
+totalECDlength,Endosseous cochlear duct length
+meanTMangle,Mean tympanic membrane angle
+TMtotalarea,Tympanic membrane area
+FPtotalarea,Columella footplate area
+CAtotalarea,Cochlear aqueduct area
+RWtotalarea,Round window area
+dis_coltip_TMcentroid,Distance from columella tip to center of eardrum
+Columella.length.mm,Columella length
+Columella.volume.mm3,Columella volume
+area_ratio,Tympanic membrane area/columella footplate area
+Species,Species common name
+Low.Hz,NA
+Order,Order
+Family,Family
+Category,"Ecological groupings (terrestrial, surface foraging, or underwater pursuit)"
+birdtree,Names of species from birdtree.org phylogeny databse
+IAC_detail,"Condition of IAC connection (Y = yes, pneumaticity present, pneumaticity absent)"
+IBP_detail,"Condition of IBP connection (Y = yes, pneumaticity present, pneumaticity absent)"
+maxdd,maximum dive depth
+divescore,dive score
+catfeeding,NA
+catfeeding2,NA
+Avg_max_depth,Average maximum dive depth
+Max_duration..s.,Maximum dive duration (s)
+Avg_max_dur,Average maximum dive duration (s)
+Method,Method for determining dive capability
+Reference_depth,Reference for dive depth
+Reference_duration,Reference for dive duration
+plungedistinct,"Ecological groupings (terrestrial, surface foraging, plunging, or underwater pursuit)"
