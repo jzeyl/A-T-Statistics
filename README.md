@@ -31,7 +31,7 @@ to plot the pPCA results.
 This runs the pgls functions for ear ear measure, and computes AIC.
 > run PGLS and AIC.R
 
-The scipt calls separate PGLS scripts, one for each model:
+The script calls separate PGLS scripts, one for each model:  
 "pgls_HM.R"                                                                                                               
 "pgls_HM_plus_ecol.R"                                                                                                                
 "pgls_HM_times_ecol.R"  
