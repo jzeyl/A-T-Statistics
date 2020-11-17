@@ -43,6 +43,6 @@ This runs the analysis comparing. Shown here for the interaural canal (IAC) only
 > "brms phylogenetic.R"
 
 ## 6. Intra-class correlation coefficient for measurement repeatability
-"All ICC.csv" - data file
+"All ICC.csv" - data file  
 "ICC_.R" - runs and plots the ICC 
 
