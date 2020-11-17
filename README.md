@@ -42,7 +42,7 @@ The script calls separate PGLS scripts, one for each model:
 This runs the analysis comparing. Shown here for the interaural canal (IAC) only
 > "brms phylogenetic.R"
 
-## 6. Intrac-class correlation coefficient for measurement repeatability
+## 6. Intra-class correlation coefficient for measurement repeatability
 "All ICC.csv" - data file
 "ICC_.R" - runs and plots the ICC 
 
