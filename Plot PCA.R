@@ -188,7 +188,7 @@ ggarrange(loadings1,p,
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_noair.pdf",width = 10, height = 10)
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_withair.pdf",width = 10, height = 10)
 
-ggsave("D:/Analysis_plots/PCA_Dec1.pdf",width = 10, height = 15)
+ggsave("D:/Analysis_plots/PCA_Dec1.pdf",width = 10, height = 10)
 
 
 
