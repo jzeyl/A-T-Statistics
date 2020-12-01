@@ -93,10 +93,10 @@ mypal <- colorRampPalette(brewer.pal(6, "Blues"))
 #plot by orders
 order<-runPCAplot("Order2","PC1","PC2",1,2) +
   geom_point(aes(fill = Order2), size = 3, shape = 21, col = "black")+
-  scale_fill_brewer(palette = "Set1", na.value = "green")+
-  scale_color_brewer(palette = "Set1", na.value = "green")+
+  scale_fill_brewer(palette = "Dark2", na.value = "white")+
+  scale_color_brewer(palette = "Dark2", na.value = "white")+
   theme(legend.position = "none")+
-  #theme(legend.position = "bottom")+
+  theme(legend.position = "right")+
   #ylim(c(-50,50))+
   #ylim(c(-70,70))+
   #geom_text_repel(aes(label = Binomial3))+
@@ -121,24 +121,40 @@ ORDER<-order    +  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=
 #geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Anseriformes",], 
 #                aes_string(),s_shape=1, expand=0, alpha = 1)
 
+# The palette with grey:
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# The palette with black:
+cbbPalette <- c(	"#FFFFFF","#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+
 #plot by aquatic groupings
 plunge<-runPCAplot("plungedistinct","PC1","PC2",1,2)+
   geom_point(aes(fill = plungedistinct), size = 3, shape = 21, col = "black")+
-  scale_color_manual(values=c("green","black","darkgrey","blue"))+
-  geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial0!="",], size = 8, shape = 23, color = "black", fill = "blue")+
-  geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial2!="",], size = 8, shape = 23, color = "black", fill = "green")+
-  scale_fill_manual(values=alpha(c("green","black","darkgrey","blue"), 0.7))+
-  theme(legend.position = "none")
+  #scale_color_manual(values=c("green","black","darkgrey","blue"))+
+  #geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial0!="",], size = 8, shape = 23, color = "black", fill = "blue")+
+  #geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial2!="",], size = 8, shape = 23, color = "black", fill = "green")+
+  scale_fill_manual(values = cbbPalette)+
+  #scale_fill_brewer(palette = "Paired")#
+  #scale_fill_manual(values=alpha(c("#66c2a5","#fc8d62","darkgrey","blue"), 0.7))+
+  theme(legend.position = "right")
 plunge
 
 #plot by dive score
 mypal <- colorRampPalette(rev(brewer.pal(6, "Blues")))
+
+BLUE<-c("#d0d1e6",
+"#a6bddb",
+"#74a9cf",
+"#2b8cbe",
+"#045a8d")
 divescore<-runPCAplot("divescore","PC1","PC2",1,2)+
   geom_point(aes(fill = divescore), size = 3, shape = 21,col = "black")+
-  scale_fill_manual(values = rev(mypal(5)), na.value = "green")+
-  scale_color_manual(values = rev(mypal(5)), na.value = "green")
-  #theme(legend.position = "none")+
-  geom_point(aes(shape = IBP))
+  #scale_fill_brewer(palette = "BuPu")
+  scale_fill_manual(values = BLUE)+
+  #scale_fill_manual(values = rev(mypal(5)), na.value = "white")+
+  #scale_color_manual(values = rev(mypal(5)), na.value = "white")
+  theme(legend.position = "right")
+  #geom_point(aes(shape = IBP))
 divescore
 
 ########plot LOADINGS
@@ -155,7 +171,7 @@ loadings1<-ggplot(pPCAloadings, aes(x = PC1, y = PC2, label =factor)) +
   theme_classic()+
   xlim(-1.5,+1)+
   ylim(-1,1)+
-  geom_segment(aes(x = 0, y = 0,xend = PC1, yend = PC2), arrow = arrow(type = "closed"))+
+  geom_segment(aes(x = 0, y = 0,xend = PC1, yend = PC2), arrow = arrow(type = "closed", length = unit(0.10,"inches")))+
   theme(legend.position = "bottom")
 #geom_encircle(aes(colour = Category, fill = Category),s_shape=1, expand=0)#s_shape = 1 and expan = 0 are convex hull
 loadings1
@@ -163,7 +179,7 @@ loadings1
 loads<-loadings1+ annotation_custom(ggplotGrob(p), xmin = 0.4, xmax = 1, 
                   ymin = 0.2, ymax = 1)
 
-ggarrange(loadings1,ORDER,plunge,divescore)
+ggarrange(loadings1,ORDER,plunge,divescore, labels = c("A","B","C","D"))
 
 ggarrange(loadings1,p,
           order,cat,
@@ -172,7 +188,7 @@ ggarrange(loadings1,p,
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_noair.pdf",width = 10, height = 10)
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_withair.pdf",width = 10, height = 10)
 
-ggsave("D:/Analysis_plots/PCAsept4_with.pdf",width = 10, height = 15)
+ggsave("D:/Analysis_plots/PCA_Dec1.pdf",width = 10, height = 15)
 
 
 

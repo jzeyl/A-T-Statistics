@@ -7,7 +7,7 @@ library(ggplot2)
 library(tidyr)
 
 #set working directory and load data
-setwd("I:/AQ_TERR")
+setwd("D:/ATclone/A_T-stats")
 
 #load main dataframe
 df<-read.csv(file.choose(), stringsAsFactors = F, header = T) #, stringsAsFactors = FALSE
