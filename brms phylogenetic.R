@@ -38,8 +38,8 @@ IACdetailclean<-dfconnectivity[-which(dfconnectivity$IAC_detail==""|
                                         dfconnectivity$IAC_detail ==" "),]
 
 #select variables needed for model
-data_simple2 <- cbind.data.frame(IACdetailclean$Binomial,IACdetailclean$plungedistinct,IACdetailclean$IAC_detail)
-colnames(data_simple2)<-c("binomial","plungedistinct","IAC")
+data_simple2 <- cbind.data.frame(IACdetailclean$Binomial,IACdetailclean$plungedistinct,IACdetailclean$IAC_detail,IACdetailclean$divescore)
+colnames(data_simple2)<-c("binomial","plungedistinct","IAC","divescore")
 head(data_simple2)
 data_simple2$plungedistinct<-as.factor(data_simple2$plungedistinct)
 data_simple2$IAC<-as.factor(data_simple2$IAC)
@@ -56,6 +56,7 @@ levels(data_simple2$plungedistinct)
 levels(data_simple2$IAC)
 head(data_simple2)
 
+
 ##prune the phylogeny to match the dataset
 phylokeep<-keep.tip(birdtreels,as.character(data_simple2$binomial))
 A2 <- ape::vcv.phylo(phylokeep)
@@ -67,13 +68,7 @@ model_simple2 <- brm(
   family = cumulative(), 
   data2 = list(A2 = A2),
   chains = 2,
-  iter = 6000#,
-  # prior = c(
-  #  prior(normal(0, 10), "b"),
-  #  prior(normal(0, 50), "Intercept"),
-  #  prior(student_t(3, 0, 20), "sd"),
-  #  prior(student_t(3, 0, 20), "sigma")
-  #)
+  iter = 6000
 )
 
 
@@ -108,37 +103,102 @@ IACeffct<-ggplot(feIAC)+
   geom_pointrange(data = topltIAC[topltIAC$cat=="b_plungedistinctUnderwaterpursuit",], aes(x = Estimate, xmin = Q2.5, xmax = Q97.5, y = -0.015), col = "blue", fill = "blue", alpha = 0.5)
 IACeffct
 
-#leave one out function - could be used for model selection
-loo(model_simple2,model_simple22)
+###################3analysis aquatic only
+data_simple2_aq<-data_simple2[data_simple2$plungedistinct!="Terrestrial",]
+data_simple2_aq$plungedistinct<-droplevels(data_simple2_aq$plungedistinct,exclude = "Terrestrial")
+levels(data_simple2_aq$plungedistinct)
+data_simple2_aq$plungedistinct<-relevel(data_simple2_aq$plungedistinct, ref = "Surface")
 
 
+phylokeep3<-keep.tip(birdtreels,data_simple2_aq$binomial)
+A3 <- ape::vcv.phylo(phylokeep3)
 
-marginal_effects(model_simple2, "plungedistinct", categorical = TRUE)
+model_simple2_aq <- brm(
+  IAC ~ 1+ plungedistinct + (1|gr(binomial, cov = A3)), 
+  data = data_simple2_aq, 
+  family = cumulative(), 
+  data2 = list(A3 = A3),
+  chains = 2,
+  iter = 6000
+)
 
-odds<-exp(c(21.51,2.94,73))
-odds<-exp(c(11.39,-4.92,49))
-odds
-p<-odds/(1+odds)
-p
-get_variables(model_simple2)
-library(tidybayes)
-library(modelr)
-data_simple2 %>%
-  data_grid(plungedistinct) %>%
-  add_predicted_draws(model_simple2) %>%
-  ggplot(aes(x = .prediction, y = plungedistinct)) +
-  stat_slab()
+summary(model_simple2_aq)
 
-library(rstan)
-stan(file.choose(), control = list(adapt_delta = 0.99))
+#plot conditional probabilities
+p<-plot(conditional_effects(model_simple2_aq,categorical = TRUE))
+ggIAC<-p$`plungedistinct:cats__`
+IACplt<-ggIAC+theme_classic()+
+  xlab("Ecological plungedistinct")
+IACplt
 
-hyp <- "sd_phylo2__Intercept^2 / (sd_phylo2__Intercept^2 + sigma^2) = 0"
-(hyp <- hypothesis(model_simple2, hyp, class = NULL))
+feIAC<-as.data.frame(fixef(model_simple2_aq, summary = FALSE))
+psIAC<-as.data.frame(posterior_summary(model_simple2_aq))
 
-plot(hyp)
+#plot 95% credible interval by ecological group
+topltIAC<-psIAC[3:4,]
+topltIAC$cat<-row.names(topltIAC)
+ggplot(topltIAC, aes(y = cat,x = Estimate))+
+  geom_pointrange(aes(x = Estimate, xmin = Q2.5, xmax = Q97.5))
+
+#plot posterior distrbution and 95% credible interval
+IACeffct<-ggplot(feIAC)+
+  geom_density(aes(x = plungedistinctPlunging), col = "black", fill = "black", alpha = 0.5)+
+  geom_density(aes(x = plungedistinctUnderwaterpursuit), col = "blue", fill = "blue", alpha = 0.5)+
+  theme_classic()+
+  xlab("Estimate")+
+  ylab("Posterior distribution")+
+  geom_pointrange(data = topltIAC[topltIAC$cat=="b_plungedistinctPlunging",], aes(x = Estimate, xmin = Q2.5, xmax = Q97.5, y = -0.0125), col = "black", fill = "grey", alpha = 0.5)+
+  geom_pointrange(data = topltIAC[topltIAC$cat=="b_plungedistinctUnderwaterpursuit",], aes(x = Estimate, xmin = Q2.5, xmax = Q97.5, y = -0.015), col = "blue", fill = "blue", alpha = 0.5)
+IACeffct
 
 
-setdiff(phylo2$tip.label,data_simple2$binomial)
-setdiff(data_simple2$binomial,phylo2$tip.label)
+##########
+
+data_simple2_aq<-data_simple2[data_simple2$plungedistinct!="Terrestrial",]
+data_simple2_aq$plungedistinct<-droplevels(data_simple2_aq$plungedistinct,exclude = "Terrestrial")
+levels(data_simple2_aq$plungedistinct)
+data_simple2_aq$plungedistinct<-relevel(data_simple2_aq$plungedistinct, ref = "Surface")
+
+
+phylokeep3<-keep.tip(birdtreels,data_simple2_aq$binomial)
+A3 <- ape::vcv.phylo(phylokeep3)
+
+model_simple2_divescore <- brm(
+  IAC ~ 1+ divescore + (1|gr(binomial, cov = A3)), 
+  data = data_simple2_aq, 
+  family = cumulative(), 
+  data2 = list(A3 = A3),
+  chains = 2,
+  iter = 6000
+)
+
+summary(model_simple2_divescore)
+
+#plot conditional probabilities
+p<-plot(conditional_effects(model_simple2_divescore,categorical = TRUE))
+ggIAC<-p$`divescore:cats__`
+IACplt<-ggIAC+theme_classic()+
+  xlab("divescore")
+IACplt
+
+feIAC<-as.data.frame(fixef(model_simple2_divescore, summary = FALSE))
+psIAC<-as.data.frame(posterior_summary(model_simple2_divescore))
+
+#plot 95% credible interval by ecological group
+topltIAC<-psIAC[3,]
+topltIAC$cat<-row.names(topltIAC)
+ggplot(topltIAC, aes(y = cat,x = Estimate))+
+  geom_pointrange(aes(x = Estimate, xmin = Q2.5, xmax = Q97.5))
+
+#plot posterior distrbution and 95% credible interval
+IACeffct<-ggplot(feIAC)+
+  geom_density(aes(x = divescore), col = "black", fill = "black", alpha = 0.5)+
+  theme_classic()+
+  xlab("Estimate")+
+  ylab("Posterior distribution")+
+  geom_pointrange(data = topltIAC[topltIAC$cat=="b_divescore",], aes(x = Estimate, xmin = Q2.5, xmax = Q97.5, y = -0.0125), col = "black", fill = "grey", alpha = 0.5)
+IACeffct
+
+
 
 
