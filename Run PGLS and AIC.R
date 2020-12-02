@@ -7,7 +7,7 @@ options(scipen=999, digits = 3)# take out of scientific notation and allow 3 sig
 pgls_models<-function(i){
   pglsfit<-pgls(as.formula(i), data = birdCDO, #check comparative data object here<---
                 lambda = 'ML', #find lambda using maximum likelihood
-                bounds = list(lambda=c(0.011,1)))#####
+                bounds = list(lambda=c(0.0011,1)))#####
 }
 
 
@@ -85,8 +85,8 @@ body_add_flextable(toprint,flexall)#add pgls output table
 body_end_section_landscape(toprint)
 
 #print to file
-print(toprint,target = "I:/Analysis_plots/AIC best model Nov 12 no terr.docx")
-print(toprint,target = "D:/Analysis_plots/AIC Oct 3 compare_terr.docx")
+print(toprint,target = "D:/Analysis_plots/AIC best model Dec 1 no terr.docx")
+print(toprint,target = "D:/Analysis_plots/AIC Dec 1 compare_terr.docx")
 
 
 #(2)#######Get model details for best model###########
@@ -123,6 +123,6 @@ toprint<-read_docx() #create word doc object
 body_add_flextable(toprint,flexall)#add pgls output table
 body_end_section_landscape(toprint)
 
-print(toprint,target = "I:/Analysis_plots/AIC DetailsNov 12 no terr.docx")
-print(toprint,target = "I:/Analysis_plots/DetailsNov 12 terr compare.docx")
+print(toprint,target = "D:/Analysis_plots/AIC Details Dec 1 no terr.docx")
+print(toprint,target = "D:/Analysis_plots/DetailsNov 12 terr compare.docx")
 

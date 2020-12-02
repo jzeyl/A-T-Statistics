@@ -125,5 +125,5 @@ birdCDO$dropped
 #Remove 'terrestrial' as a level
 birdCDO$data$plungedistinct<-droplevels(birdCDO$data$plungedistinct, exclude = "Terrestrial")
 levels(birdCDO$data$plungedistinct)
-relevel(birdCDO$data$plungedistinct, ref = "Surface")
+birdCDO$data$plungedistinct<-relevel(birdCDO$data$plungedistinct, ref = "Surface")
 ############################################################################################
