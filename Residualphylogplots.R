@@ -80,7 +80,7 @@ ggtree(orderPhy)+
   geom_text(aes(label = node))
 
 gg_tr <- ggtree(orderPhy, branch.length = "none") + 
-  geom_tiplab(align=TRUE, size =1.5) +
+  geom_tiplab(align=TRUE) +
   #scale_x_continuous(expand=expand_scale(0.2)) + # make more room for the labels
   scale_y_tree()+ 
   xlim(0,40)+
@@ -97,40 +97,43 @@ xlim(0,40)+
 gg_tr_rev
 
 #plungedistinct
-gg_plungedistinct<-function(index2){
+gg_plungedistinct<-function(index2, letter, box = "yes"){
   ggtreeplot(gg_tr, subset(longdfplotting,
-                           longdfplotting$earmeasuresresid==yvarnames[index2]), aes(y=earmeasureval), flip=TRUE) +
-    geom_rect(aes(xmin = 25, xmax = 31, ymin = Inf, ymax = -Inf), fill = "grey", alpha = 0.1)+
-    geom_rect(aes(xmin = 9.5, xmax = 17.5, ymin = Inf, ymax = -Inf), col = "black", fill = "white", alpha = 0.1)+
+                           longdfplotting$earmeasuresresid==yvarnames[index2]), aes(y=earmeasureval), flip=TRUE) +{
+    
+    if(box == "yes") geom_rect(aes(xmin = 26.5, xmax = 31, ymin = Inf, ymax = -Inf), fill = "grey", alpha = 0.1) else geom_rect(aes(xmin = 26.5, xmax = 31, ymin = Inf, ymax = -Inf), fill = "white", alpha = 0.001)
+    } +
+      geom_vline(xintercept = 1:30, col = "grey")+
+    geom_rect(aes(xmin = 9.5, xmax = 17.5, ymin = -Inf, ymax = -Inf), col = "black", fill = "white", alpha = 0.1)+
     geom_point(aes(fill = plungedistinct), size = 2,shape = 21, col = "black")+
-    geom_vline(xintercept = 1:30, col = "grey")+
      scale_fill_manual(values = cbbPalette)+
     coord_flip() + no_y_axis()+
     ylab("")+
     xlim(0,31)+
     geom_hline(yintercept = 0, col = "grey")+
-    theme_classic() +
+    theme_bw() +
     theme(axis.line.y = element_blank(), 
           axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),
           legend.position = "none",
-          plot.margin = margin(0,0,0,0))+
-   #geom_text(aes(label = "T"),x = 29,y = -1)+
-   #geom_text(aes(label = "SF"),x = 30,y = -1)+
-   #geom_text(aes(label = "P"),x = 28,y = -1)+
-   #geom_text(aes(label = "UP"),x = 27,y = -1)+
-    #geom_boxplot(aes(x = 29, y = earmeasureval[longdfplotting$plungedistinct=="Terrestrial"]))+
+          plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))+
     geom_boxplot(data = subset(longdfplotting,
                                longdfplotting$earmeasuresresid==yvarnames[index2]&
                                  longdfplotting$plungedistinct=="Terrestrial"),
-                 aes(x = 30, y = earmeasureval),fill= "white")
+                 aes(x = 30, y = earmeasureval),fill= "white")+
+    geom_text(aes(x=Inf,y=-Inf,vjust = 1,
+                  hjust = -1,label=letter))
    }
 
-gg_plungedistinct(1)
+gg_plungedistinct(1, letter = "K",box = "no")
 
-addbxplt<-function(j,index2){
-  d<-gg_plungedistinct(index2)+
+
+gg_plungedistinct(1, letter = "K")
+
+
+addbxplt<-function(j,index2,letter,box = "yes"){
+  d<-gg_plungedistinct(index2,letter,box)+
   geom_boxplot(data = subset(longdfplotting,
                              longdfplotting$earmeasuresresid==yvarnames[j]&
                                longdfplotting$plungedistinct=="Plunging"),
@@ -148,11 +151,31 @@ addbxplt<-function(j,index2){
     
   d
 }
+
+#two rows
+((gg_tr|addbxplt(1,1,"a")|addbxplt(2,2,"b")|addbxplt(3,3,"c")|addbxplt(4,4,"d")|
+  addbxplt(5,5,"e")|addbxplt(6,6,"f")|addbxplt(7,7,"g"))/
+(gg_tr|addbxplt(8,8,"h")|addbxplt(9,9,"i")|addbxplt(11,11,"j")|
+  addbxplt(12,12,"k")|addbxplt(10,10,"l")|IAC|IBP))+  plot_annotation(tag_levels="A")
+
+#one row
 ((gg_tr|addbxplt(1,1)|addbxplt(2,2)|addbxplt(3,3)|addbxplt(4,4)|
-  addbxplt(5,5)|addbxplt(6,6)|addbxplt(7,7))/
-(gg_tr||addbxplt(8,8)|
-  addbxplt(9,9)|addbxplt(10,10)|addbxplt(11,11)|
-  addbxplt(12,12)))+  plot_annotation(tag_levels="A")
+    addbxplt(5,5)|addbxplt(6,6)|addbxplt(7,7)|
+   addbxplt(8,8)|addbxplt(9,9)|addbxpltnobx(11,11)|
+       addbxplt(12,12)|addbxplt(10,10)|IAC+IBP))+  plot_annotation(tag_levels="A")
+
+#one row, modified proportions
+gg_tr|addbxplt(1,1,"a")+addbxplt(2,2,"b")|addbxplt(3,3,"c")+addbxplt(4,4,"d")|
+    addbxplt(5,5,"e")+addbxplt(6,6,"f")|addbxplt(7,7,"g")+
+    addbxplt(8,8,"h")|addbxplt(9,9,"i", box = "no")+addbxplt(11,11,"j")|
+    addbxplt(12,12,"k", box = "no")+addbxplt(10,10,"l")|IAC("m")+IBP("n")
+
+
+#one row, remove columella size and other non-significant
+((gg_tr|addbxplt(1,1)+addbxplt(2,2)|addbxplt(3,3)+addbxplt(4,4)|
+    addbxplt(5,5)+addbxplt(6,6)|addbxplt(7,7)+
+    addbxplt(8,8)|addbxplt(9,9)+addbxplt(10,10)|IAC+IBP))+  plot_annotation(tag_levels="A")
+
 
 
 gg_tr|addbxplt(1,1)|IAC
@@ -264,7 +287,8 @@ summa<-summ[which(!is.na(summ$IAC_detail)),]
 #  theme(axis.text.x = element_text(angle = 90))+
 #  ylab("Percentage of counts by group")
 
-IAC<-ggtreeplot(gg_tr, summa, aes(y=number), flip=TRUE) +
+IAC<-function(letter){
+  d<-ggtreeplot(gg_tr, summa, aes(y=number), flip=TRUE) +
   geom_col(aes(fill = IAC_detail), position = "fill", color = "black")+
   scale_fill_brewer(palette = "Set1")+
   #no_legend()+
@@ -272,13 +296,19 @@ IAC<-ggtreeplot(gg_tr, summa, aes(y=number), flip=TRUE) +
   coord_flip() + no_y_axis()+
   theme(axis.text.x = element_text(angle = 90))+
   ylab("Percentage of counts by group")+
-  theme_classic() +
+  theme_bw() +
   theme(axis.line.y = element_blank(), 
         axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
-        legend.position = "none")#,
-IAC   
+        legend.position = "none",
+        plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))+
+  geom_text(data=annotations,
+            aes(x=Inf,y=-Inf,vjust = 1,
+                hjust = -1,label=letter))
+            d
+}
+IAC("d")   
 display.brewer.all()
 
 #gg_tr +IAC+ IBP + gg_divescore(1)+ plot_layout(widths = c(9, 1,1,1))+  
@@ -295,19 +325,24 @@ summ2<-as.data.frame(summ2)
 names(summ2)
 summb<-summ2[which(!is.na(summ2$IBP_detail)),]
 
-IBP<-ggtreeplot(gg_tr, summb, aes(y=number), flip=TRUE) +
+IBP<-function(letter){
+  ggtreeplot(gg_tr, summb, aes(y=number), flip=TRUE) +
   geom_col(aes(fill = IBP_detail), position = "fill", color = "black")+
   scale_fill_brewer(palette = "Set1")+
   coord_flip() + #no_y_axis()+
   xlim(0,31)+
   theme(axis.text.x = element_text(angle = 90))+
   ylab("Percentage of counts by group")+
-  theme_classic() +
+  theme_bw() +
   theme(axis.line.y = element_blank(), 
         axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
-        legend.position = "none")
-#scale_fill_brewer(palette="Set1")+
-IBP
+        legend.position = "none",
+        plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))+
+    geom_text(data=annotations,
+              aes(x=Inf,y=-Inf,vjust = 1,
+                  hjust = -1,label=letter))
+}
+IBP("j")
 
