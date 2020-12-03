@@ -85,7 +85,7 @@ body_add_flextable(toprint,flexall)#add pgls output table
 body_end_section_landscape(toprint)
 
 #print to file
-print(toprint,target = "D:/Analysis_plots/AIC best model Dec 1 no terr.docx")
+print(toprint,target = "D:/Analysis_plots/AIC best model Dec 2 no terr.docx")
 print(toprint,target = "D:/Analysis_plots/AIC Dec 1 compare_terr.docx")
 
 
@@ -123,6 +123,6 @@ toprint<-read_docx() #create word doc object
 body_add_flextable(toprint,flexall)#add pgls output table
 body_end_section_landscape(toprint)
 
-print(toprint,target = "D:/Analysis_plots/AIC Details Dec 1 no terr.docx")
+print(toprint,target = "D:/Analysis_plots/AIC Details Dec 2 no terr.docx")
 print(toprint,target = "D:/Analysis_plots/DetailsNov 12 terr compare.docx")
 
