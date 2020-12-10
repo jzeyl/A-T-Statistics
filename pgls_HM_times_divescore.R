@@ -1,5 +1,5 @@
 
-modellist<- paste(pgls_todo_hm,"*plungedistinct")
+modellist<- paste(pgls_todo_hm,"*divescore")
 pgls_models_list<-lapply(modellist,pgls_models)#run pgls
 
 #make list of dataframes with the PGLS outputs. 

@@ -15,7 +15,7 @@ row.names(PCAset)<-dfwithresids$Binomial#species names need to be in row names f
 names(PCAset)
 
 #remove air volume from PCA if desired (air volume has more missing values than other measures)
-PCAset<-PCAset[,-c(10)]
+#PCAset<-PCAset[,-c(10)]
 
 #remove NAs
 naomit_PCA<-na.omit(PCAset)

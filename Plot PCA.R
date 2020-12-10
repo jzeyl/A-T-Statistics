@@ -2,6 +2,7 @@ library(ggrepel)
 library(ggalt)
 library(RColorBrewer)
 library(viridis)
+library(colorspace)
 
 #SCREE PLOT
 d<-as.data.frame(diag(pPCA$Eval)/sum(pPCA$Eval)*100)
@@ -71,55 +72,66 @@ speciesPCAvalues$divescore<-as.factor(speciesPCAvalues$divescore)
 
 ######################plot PC1 vs PC2 coloured by different factors
 ###############BIPLOT BASIC FUNCTION####################
+
+qualitative_hcl(5, palette = "Dark 3")
+
 runPCAplot<-function(group, p1,p2,n1,n2){
 scattercat1<-ggplot(speciesPCAvalues, aes_string(x = p1, y = p2, label = "Binomial")) +
   theme_classic()+
-  xlab(label = paste0(as.character(p1),"(",
+  xlab(label = paste0("p",as.character(p1),"(",
                       as.character(signif(d$percentexplained[n1], digits = 3)),
                       "%)"))+
-  ylab(label = paste0(as.character(p2),"(",
+  ylab(label = paste0("p",as.character(p2),"(",
                       as.character(signif(d$percentexplained[n2], digits = 3)),
                       "%)"))+
   #theme(legend.position = "none")+
-geom_encircle(aes_string(fill = group),s_shape=1, expand=0, color = "black", alpha = 0.2)+#s_shape = 1 and expan = 0 are convex hull
-  geom_point(aes_string(color = group), shape = 21, size = 3, color = "black")
-  #scale_fill_manual(values = alpha(c("black","black","black","black","black","black",0.2))
-scattercat1
+  geom_encircle(data = speciesPCAvalues[which(is.na(speciesPCAvalues$Order2)),],
+                aes_string(),s_shape=1, expand=0, alpha = 0, col = "black")+
+  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Charadriiformes",],
+                aes_string(),s_shape=1, expand=0, fill = "#E16A86", alpha = 1, col = "black")+
+  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Procellariiformes",],
+                aes_string(),s_shape=1, expand=0, fill = "#00AA5A", alpha = 1)+
+  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Suliformes",],
+                aes_string(),s_shape=1, expand=0, fill = "#B675E0", alpha = 1)+
+  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Sphenisciformes",],
+                aes_string(),s_shape=1, expand=0, fill = "#AA9000", alpha = 1)+
+  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Anseriformes",],
+                aes_string(),s_shape=1, expand=0, fill = "#00A6CA",alpha = 1)+
+  geom_encircle(aes_string(fill = group),s_shape=1, expand=0, color = "black", alpha = 0.5)+#s_shape = 1 and expan = 0 are convex hull
+  geom_point(aes_string(color = group), shape = 21, size = 3, color = "black")+
+  #scale_color_manual(values = alpha(c("black","black","black","black","black","black",0.2))
+  geom_point(aes_string(fill = group), size = 3, shape = 21, col = "black")+
+  scale_color_manual(values = c("#00AA5A","#E16A86","#AA9000", "#B675E0", "#00A6CA"), na.value = "white")+
+  theme(legend.position = "none")
+  
 }
+runPCAplot("Order2","PC1","PC2",1,2)
 
 #set up color palette
 mypal <- colorRampPalette(brewer.pal(6, "Blues"))
-
+qualitative_hcl(5, palette = "Dark 3")
 #plot by orders
+speciesPCAvalues$Order2 <- fct_explicit_na(as.factor(speciesPCAvalues$Order2))
+speciesPCAvalues$Order2 <-relevel(speciesPCAvalues$Order2,ref = "(Missing)")
+
+speciesPCAvalues$Order2 <-factor(speciesPCAvalues$Order2,levels = c("(Missing)"  ,    "Procellariiformes", "Charadriiformes" , 
+          "Sphenisciformes"  , "Suliformes", "Anseriformes" ))
+
 order<-runPCAplot("Order2","PC1","PC2",1,2) +
   geom_point(aes(fill = Order2), size = 3, shape = 21, col = "black")+
-  scale_fill_brewer(palette = "Dark2", na.value = "white")+
-  scale_color_brewer(palette = "Dark2", na.value = "white")+
+  scale_fill_manual(values = c("white","#00AA5A","#E16A86","#AA9000", "#B675E0", "#00A6CA"))+
   theme(legend.position = "none")+
-  theme(legend.position = "right")+
-  #ylim(c(-50,50))+
-  #ylim(c(-70,70))+
-  #geom_text_repel(aes(label = Binomial3))+
-  #geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Anseriformes",],  aes(fill = Order3, col = "blue"),col = "blue",s_shape=1, expand=0, alpha = 0.3)+#s_shape = 1 and expan = 0 are convex hull
 
-  #geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial4p5!="",], size = 8, shape = 23, color = "black", fill = "grey")+
-  #geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial4!="",], size = 8, shape = 23, color = "black", fill = "green")+
+  theme(legend.position = "right")+  
+  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Anseriformes",],
+                                                   aes_string(),s_shape=1, expand=0, fill = "#00AA5A",alpha = 0.5)+
 
-  #geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial5!="",], size = 8, shape = 23, color = "black", fill = "blue")
-  
-  #geom_text_repel(aes(label = Binomial5))
-  #geom_text_repel(aes(label = Binomial3), vjust = 2, nudge_y = 50-speciesPCAvalues$PC1)+
-  #geom_text_repel(aes(label = Binomial4),vjust = 2, nudge_x = 70-speciesPCAvalues$PC1)+
-  #geom_text_repel(aes(label = Binomial5),vjust = 2, nudge_x = -60+speciesPCAvalues$PC1)
-  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Charadriiformes",], aes_string(),s_shape=1, expand=0, alpha = 0.2)
-order    +  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Charadriiformes",],
-                      aes_string(),s_shape=1, expand=0, alpha = 1)
+  geom_text_repel(aes(label = Binomial5),
+                  nudge_y = 30 - speciesPCAvalues$PC2)+
+  geom_text_repel(aes(label = Binomial4),
+            nudge_y = 30 - speciesPCAvalues$PC2)
+order   
 
-ORDER<-order    +  geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Charadriiformes",], 
-                          aes_string(),s_shape=1, expand=0, alpha = 1)
-
-#geom_encircle(data = speciesPCAvalues[speciesPCAvalues$Order=="Anseriformes",], 
-#                aes_string(),s_shape=1, expand=0, alpha = 1)
 
 # The palette with grey:
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
@@ -127,35 +139,90 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 cbbPalette <- c(	"#FFFFFF","#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 
+runPCAplotPlunge<-function(group, p1,p2,n1,n2){
+  scattercat1<-ggplot(speciesPCAvalues, aes_string(x = p1, y = p2, label = "Binomial")) +
+    theme_classic()+
+    xlab(label = paste0("p",as.character(p1),"(",
+                        as.character(signif(d$percentexplained[n1], digits = 3)),
+                        "%)"))+
+    ylab(label = paste0("p",as.character(p2),"(",
+                        as.character(signif(d$percentexplained[n2], digits = 3)),
+                        "%)"))+
+    #theme(legend.position = "none")+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$plungedistinct =="Plunging",],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$plungedistinct =="Terrestrial",],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$plungedistinct =="Surface",],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$plungedistinct =="Underwater pursuit",],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(aes_string(fill = group),s_shape=1, expand=0, color = "black", alpha = 0.7)+#s_shape = 1 and expan = 0 are convex hull
+    geom_point(aes_string(color = group), shape = 21, size = 3, color = "black")
+  #scale_color_manual(values = alpha(c("black","black","black","black","black","black",0.2))
+  scattercat1
+}
+runPCAplotPlunge("plungedistinct","PC1","PC2",1,2)
+
 #plot by aquatic groupings
-plunge<-runPCAplot("plungedistinct","PC1","PC2",1,2)+
+plunge<-runPCAplotPlunge("plungedistinct","PC1","PC2",1,2)+
   geom_point(aes(fill = plungedistinct), size = 3, shape = 21, col = "black")+
-  #scale_color_manual(values=c("green","black","darkgrey","blue"))+
-  #geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial0!="",], size = 8, shape = 23, color = "black", fill = "blue")+
-  #geom_point(data = speciesPCAvalues[speciesPCAvalues$Binomial2!="",], size = 8, shape = 23, color = "black", fill = "green")+
   scale_fill_manual(values = cbbPalette)+
-  #scale_fill_brewer(palette = "Paired")#
-  #scale_fill_manual(values=alpha(c("#66c2a5","#fc8d62","darkgrey","blue"), 0.7))+
-  theme(legend.position = "right")
-plunge
+  theme(legend.position = "right")+
+  geom_text(aes(label = Binomial2))+
+  geom_text(aes(label = Binomial0))
+plunge 
 
 #plot by dive score
-mypal <- colorRampPalette(rev(brewer.pal(6, "Blues")))
-
-BLUE<-c("#d0d1e6",
+#mypal <- colorRampPalette(rev(brewer.pal(6, "Blues")))
+sequential_hcl(5, palette = "Purple-Blue", rev = T)
+BLUE<-c("white","#d0d1e6",
 "#a6bddb",
 "#74a9cf",
 "#2b8cbe",
 "#045a8d")
-divescore<-runPCAplot("divescore","PC1","PC2",1,2)+
-  geom_point(aes(fill = divescore), size = 3, shape = 21,col = "black")+
-  #scale_fill_brewer(palette = "BuPu")
-  scale_fill_manual(values = BLUE)+
-  #scale_fill_manual(values = rev(mypal(5)), na.value = "white")+
-  #scale_color_manual(values = rev(mypal(5)), na.value = "white")
+
+divecol<-c("white",sequential_hcl(6, palette = "Purple-Blue",rev = T)[2:6])
+
+speciesPCAvalues$divescore <- fct_explicit_na(speciesPCAvalues$divescore)
+
+runPCAplotdive<-function(group, p1,p2,n1,n2){
+  scattercat1<-ggplot(speciesPCAvalues, aes_string(x = p1, y = p2, label = "Binomial")) +
+    theme_classic()+
+    xlab(label = paste0("p",as.character(p1),"(",
+                        as.character(signif(d$percentexplained[n1], digits = 3)),
+                        "%)"))+
+    ylab(label = paste0("p",as.character(p2),"(",
+                        as.character(signif(d$percentexplained[n2], digits = 3)),
+                        "%)"))+
+    #theme(legend.position = "none")+
+    geom_encircle(data = speciesPCAvalues[which(is.na(speciesPCAvalues$divescore)),],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$divescore==0,],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$divescore==1,],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$divescore==2,],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$divescore==3,],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(data = speciesPCAvalues[speciesPCAvalues$divescore==4,],
+                  aes_string(),s_shape=1, expand=0, alpha = 1)+
+    geom_encircle(aes_string(fill = group),s_shape=1, expand=0, color = "black", alpha = 0.7)+#s_shape = 1 and expan = 0 are convex hull
+    geom_point(aes_string(color = group), shape = 21, size = 3, color = "black")
+  #scale_color_manual(values = alpha(c("black","black","black","black","black","black",0.2))
+  scattercat1
+}
+runPCAplotdive("divescore","PC1","PC2",1,2)
+
+divescore<-runPCAplotdive("divescore","PC1","PC2",1,2)+
+  geom_point(aes(fill = divescore), size = 3, shape = 21,col = "black", alpha = 1)+
+  scale_fill_manual(values = divecol)+
+  #scale_alpha_manual(values = c(-.5,1,0,0,56))
   theme(legend.position = "right")
-  #geom_point(aes(shape = IBP))
 divescore
+
+  
 
 ########plot LOADINGS
 pPCAloadings$factor<-row.names(pPCAloadings)
@@ -163,8 +230,10 @@ pPCAloadings$factor<-gsub("RES_log"," ",pPCAloadings$factor)
 pPCAloadings$factor<-gsub("logHeadmassg","",pPCAloadings$factor)
 
 
-library(ggrepel)
 loadings1<-ggplot(pPCAloadings, aes(x = PC1, y = PC2, label =factor)) +
+  xlab(label = "pPC1")+
+  ylab(label = "pPC2")+
+  
   #geom_point(aes(), size = 0.005) +
   #geom_point(data = pPCAloadings)+
   geom_text_repel(aes()) +
@@ -173,13 +242,12 @@ loadings1<-ggplot(pPCAloadings, aes(x = PC1, y = PC2, label =factor)) +
   ylim(-1,1)+
   geom_segment(aes(x = 0, y = 0,xend = PC1, yend = PC2), arrow = arrow(type = "closed", length = unit(0.10,"inches")))+
   theme(legend.position = "bottom")
-#geom_encircle(aes(colour = Category, fill = Category),s_shape=1, expand=0)#s_shape = 1 and expan = 0 are convex hull
 loadings1
 
 loads<-loadings1+ annotation_custom(ggplotGrob(p), xmin = 0.4, xmax = 1, 
                   ymin = 0.2, ymax = 1)
 
-ggarrange(loadings1,ORDER,plunge,divescore, labels = c("A","B","C","D"))
+ggarrange(loadings1,plunge,divescore, order,labels = c("A","B","C","D"))
 
 ggarrange(loadings1,p,
           order,cat,
