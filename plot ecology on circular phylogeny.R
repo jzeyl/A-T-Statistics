@@ -1,3 +1,21 @@
+library(ggplot2)
+library(RColorBrewer)
+library(ggtree)
+library(colorspace)
+divecol<-c(sequential_hcl(6, palette = "Purple-Blue",rev = T)[2:6])
+
+bar
+
+#count # in each order
+orderdf<-avgdf %>% count(Order)
+
+#distinct df
+g2<-avgdf[!duplicated(avgdf$Order),]#orders only
+g2order<-arrange(g2,Order)#sort to match order df
+g2order$n<-orderdf$n#attach number of species in order
+str(g2order$Binomial)
+#drop timps for order
+
 #fig sampling and grouping
 mypal <- colorRampPalette(brewer.pal(6, "Blues"))
 mypal2 <- colorRampPalette(brewer.pal(6, "YlOrRd"))
@@ -95,7 +113,7 @@ k<-gheatmap(p,avgdf[,c("plungedistinct","divescore")], #"Category",
             colnames_angle = 0,
             colnames_offset_x = 0,
             colnames_offset_y = 0)+
-  scale_fill_manual(values = c(BLUE,"#000000", "#E69F00","#FFFFFF", "#56B4E9"), na.value = "#FFFFFF")
+  scale_fill_manual(values = c(divecol,"#000000", "#E69F00","#FFFFFF", "#56B4E9"), na.value = "#FFFFFF")
 k
 
 #open up the circle
@@ -103,3 +121,47 @@ l<-open_tree(k,30)
 l
 
 ggsave("D:/Analysis_plots/ecolcircle.pdf", width=10, height=10)
+
+
+#############plot sampling 
+avgdf$Binomial2<-avgdf$Binomial
+
+a<-ggtree(birdtreels) %<+% avgdf + ###########, layout = "circular"
+  geom_tiplab(aes(label = Binomial2), linesize = 0.1, offset = 30) + #circular
+  #geom_text(aes(label = node))+
+  xlim(NA, 300) + 
+  ylim(NA,140) 
+a  
+
+avgdf$IACN<-ifelse(avgdf$IAC_detail=="",0,1)
+avgdf$IBPN<-ifelse(avgdf$IBP_detail=="",0,1)
+names(avgdf)
+
+sampled<-avgdf[,c("Head.mass..g.",
+                  "totalEClength" ,                         
+                  "meanTMangle"  ,   #"totalECDlength"  ,                       
+                  "TMtotalarea"  ,                           "FPtotalarea"  ,                          
+                  "CAtotalarea"  ,                           "RWtotalarea"  ,                          
+                  "Columella.length.mm"   ,                 
+                  "Columella.volume.mm3" ,              "Behind.TM"  ,
+                  "IACN","IBPN"  )]/avgdf[,c("Head.mass..g.",
+                                             "totalEClength" ,                                                    
+                                             "meanTMangle"  ,  #"totalECDlength"  ,                          
+                                             "TMtotalarea"  ,                           "FPtotalarea"  ,                          
+                                             "CAtotalarea"  ,                           "RWtotalarea"  ,                          
+                                             "Columella.length.mm"   ,                 
+                                             "Columella.volume.mm3" ,              "Behind.TM"  ,
+                                             "IACN","IBPN"  )]
+colnames(sampled)
+colnames(sampled)<-seq(1:length(colnames(sampled)))
+#current sampling
+k2<-gheatmap(a,sampled, 
+             width = 0.4, offset = 0,
+             color = "black",
+             colnames = T,
+             colnames_position = "top",
+             colnames_angle = 0,
+             colnames_offset_x = 0,
+             colnames_offset_y = 5)
+k2
+
