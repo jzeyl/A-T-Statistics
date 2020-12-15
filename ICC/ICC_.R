@@ -12,7 +12,7 @@ df<-read.csv(file.choose())
 df<-df[4:nrow(df),]
 
 #make list of measurements for which the ICC stat is desired
-todo<-names(df)[c(4,7:14,18:22)]
+todo<-names(df)[c(4:6,8,11,15:20)]
 
 #apply it across the list of measurements for which ICC is desired
 #combine into single dataframe
@@ -36,15 +36,11 @@ ICCboth<-rbind(ICCrd,ICCSAL)
 #write.csv(ICCboth,"E:/Analysis_plots/ICCmay8.csv")
 
 ################plot ICCs
-all<-ggplot(data = ICCboth, aes(x = reorder(measure,-ICC), y = ICC, color = species)) +
-  #geom_bar(stat = "identity", fill = Species) +
-  geom_pointrange(aes(ymin = LowerCI, ymax = UpperCI), position=position_dodge(.3))+
-  geom_hline(yintercept = c(0,0.25,0.5,0.75,1)) +
-  #coord_flip() +
+all<-ggplot(data = ICCboth, aes(x = reorder(measure,-ICC), y = ICC, shape = species)) +
+  geom_hline(yintercept = c(0,0.25,0.5,0.75,1), col = "grey") +
+  geom_pointrange(aes(ymin = LowerCI, ymax = UpperCI), fill = "white", position=position_dodge(.3))+
+  scale_shape_manual(values = c(21,24))+
   xlab("")+
   theme_bw() +
-  #facet_wrap(~use)+
-  #geom_text(aes(y = -0.1), angle = 45, hjust = 0, size = 2, color = "black")+
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))+
-  ggtitle("Intraclass correlation coefficients (+/- 95% CI)")
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
 all
