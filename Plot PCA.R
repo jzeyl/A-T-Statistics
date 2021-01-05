@@ -3,6 +3,7 @@ library(ggalt)
 library(RColorBrewer)
 library(viridis)
 library(colorspace)
+library(forcats)
 
 #SCREE PLOT
 d<-as.data.frame(diag(pPCA$Eval)/sum(pPCA$Eval)*100)

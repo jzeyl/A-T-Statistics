@@ -9,7 +9,7 @@ source("Extract pgls residuals.R")
 names(dfwithresids)
 
 #isolate columns with residuals to be used in PCA
-PCAset<-dfwithresids[,c((ncol(dfwithresids)-11):ncol(dfwithresids))]# data to be used in PCA
+PCAset<-dfwithresids[,37:48]# data to be used in PCA
 row.names(PCAset)<-dfwithresids$Binomial#species names need to be in row names for use of phy.PCA function
 
 names(PCAset)
@@ -49,4 +49,5 @@ speciesPCAvalues$divescore<-as.factor(dfwithresids[match(row.names(speciesPCAval
                                                      dfwithresids$Binomial),"divescore"])#<-------------<-------
 speciesPCAvalues$plungedistinct<-as.factor(dfwithresids[match(row.names(speciesPCAvalues),
                                                      dfwithresids$Binomial),"plungedistinct"])#<-------------<-------
+
 

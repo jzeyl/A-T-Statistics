@@ -4,7 +4,6 @@ library(ggtree)
 library(colorspace)
 divecol<-c(sequential_hcl(6, palette = "Purple-Blue",rev = T)[2:6])
 
-bar
 
 #count # in each order
 orderdf<-avgdf %>% count(Order)
@@ -15,6 +14,9 @@ g2order<-arrange(g2,Order)#sort to match order df
 g2order$n<-orderdf$n#attach number of species in order
 str(g2order$Binomial)
 #drop timps for order
+
+g2order$full<-paste0(g2order$Order," (",as.character(g2order$n),")")
+g2order$Order<-as.character(g2order$Order)
 
 #fig sampling and grouping
 mypal <- colorRampPalette(brewer.pal(6, "Blues"))
@@ -138,30 +140,40 @@ avgdf$IBPN<-ifelse(avgdf$IBP_detail=="",0,1)
 names(avgdf)
 
 sampled<-avgdf[,c("Head.mass..g.",
-                  "totalEClength" ,                         
-                  "meanTMangle"  ,   #"totalECDlength"  ,                       
-                  "TMtotalarea"  ,                           "FPtotalarea"  ,                          
-                  "CAtotalarea"  ,                           "RWtotalarea"  ,                          
+                  "TMtotalarea"  ,        
+                  "FPtotalarea"  , 
+                  "dis_coltip_TMcentroid",
+                  "meanTMangle"  , 
+                  "Umbo_distancetoTMplane",
+                  "CAtotalarea"  ,                          
+                  "RWtotalarea"  ,   
+                  "totalEClength",
                   "Columella.length.mm"   ,                 
-                  "Columella.volume.mm3" ,              "Behind.TM"  ,
+                  "Columella.volume.mm3" ,         
+                  "Behind.TM"  ,
                   "IACN","IBPN"  )]/avgdf[,c("Head.mass..g.",
-                                             "totalEClength" ,                                                    
-                                             "meanTMangle"  ,  #"totalECDlength"  ,                          
-                                             "TMtotalarea"  ,                           "FPtotalarea"  ,                          
-                                             "CAtotalarea"  ,                           "RWtotalarea"  ,                          
+                                             "TMtotalarea"  ,        
+                                             "FPtotalarea"  , 
+                                             "dis_coltip_TMcentroid",
+                                             "meanTMangle"  , 
+                                             "Umbo_distancetoTMplane",
+                                             "CAtotalarea"  ,                          
+                                             "RWtotalarea"  ,   
+                                             "totalEClength",
                                              "Columella.length.mm"   ,                 
-                                             "Columella.volume.mm3" ,              "Behind.TM"  ,
-                                             "IACN","IBPN"  )]
+                                             "Columella.volume.mm3" ,         
+                                             "Behind.TM"  ,
+                                             "IACN","IBPN"   )]
 colnames(sampled)
 colnames(sampled)<-seq(1:length(colnames(sampled)))
 #current sampling
 k2<-gheatmap(a,sampled, 
              width = 0.4, offset = 0,
              color = "black",
+             low = "white",  high = "blue",
              colnames = T,
              colnames_position = "top",
              colnames_angle = 0,
              colnames_offset_x = 0,
              colnames_offset_y = 5)
 k2
-
