@@ -1,5 +1,6 @@
 library(brms)
 
+############select data for IBP models########
 dfconnectivity<-avgdf[avgdf$`fluid.filled.` != "fluid filled",]
 IBPdetailclean<-dfconnectivity[which(!is.na(dfconnectivity$IBP_detail)),]
 IBPdetailclean<-dfconnectivity[-which(dfconnectivity$IBP_detail==""|dfconnectivity$IBP_detail ==" "),]
@@ -34,11 +35,10 @@ head(data_simple3)
 #IBPdetailclean<-dfconnectivity[-which(dfconnectivity$IBP_detail==""|dfconnectivity$IBP_detail ==" "),]
 #t(table(IBPdetailclean$IBP_detail,IBPdetailclean$Category))
 
-
-
 phylokeep3<-keep.tip(birdtreels,data_simple3$binomial)
 A3 <- ape::vcv.phylo(phylokeep3)
 
+##########run model - ecological group############
 model_simple3 <- brm(
   IBP ~ 1+ plungedistinct + (1|gr(binomial, cov = A3)), 
   data = data_simple3, 
@@ -79,7 +79,7 @@ IBPeffct<-ggplot(feIBP)+
   geom_pointrange(data = topltIBP[topltIBP$cat=="b_plungedistinctUnderwaterpursuit",], aes(x = Estimate, xmin = Q2.5, xmax = Q97.5, y = -0.015), col = "blue", fill = "blue", alpha = 0.5)
 IBPeffct
 
-###################3analysis aquatic only
+################aquatic-only analysis##############
 data_simple3_aq<-data_simple3[data_simple3$plungedistinct!="Terrestrial",]
 data_simple3_aq$plungedistinct<-droplevels(data_simple3_aq$plungedistinct,exclude = "Terrestrial")
 levels(data_simple3_aq$plungedistinct)
@@ -89,6 +89,7 @@ data_simple3_aq$plungedistinct<-relevel(data_simple3_aq$plungedistinct, ref = "S
 phylokeep3<-keep.tip(birdtreels,data_simple3_aq$binomial)
 A3 <- ape::vcv.phylo(phylokeep3)
 
+###############run model - ecological group###########3
 model_simple3_aq <- brm(
   IBP ~ 1+ plungedistinct + (1|gr(binomial, cov = A3)), 
   data = data_simple3_aq, 
@@ -128,7 +129,7 @@ IBPeffct<-ggplot(feIBP)+
 IBPeffct
 
 
-##########
+##########set up data for dive score model###########
 
 data_simple3_aq<-data_simple3[data_simple3$plungedistinct!="Terrestrial",]
 data_simple3_aq$plungedistinct<-droplevels(data_simple3_aq$plungedistinct,exclude = "Terrestrial")
@@ -139,6 +140,7 @@ data_simple3_aq$plungedistinct<-relevel(data_simple3_aq$plungedistinct, ref = "S
 phylokeep3<-keep.tip(birdtreels,data_simple3_aq$binomial)
 A3 <- ape::vcv.phylo(phylokeep3)
 
+#########run dive score model################
 model_simple3_divescore <- brm(
   IBP ~ 1+ divescore + (1|gr(binomial, cov = A3)), 
   data = data_simple3_aq, 

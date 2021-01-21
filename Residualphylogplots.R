@@ -10,13 +10,12 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 cbbPalette <- c(	"#FFFFFF","#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 barplot(1:5, col=cbbPalette)
 
-#subset the df with resids datafram to include only the residuals
+#subset the df with resids dataframe to include only the residuals
+#run the PCA scripts to create the dfwith resids data frame
 names(dfwithresids)
-#dfwithresids$PC1<-speciesPCAvalues$PC1[match(dfwithresids$Binomial,row.names(speciesPCAvalues))]
 
 #input column numbers that have residuals
 residseach<-dfwithresids[,c(37:48)]
-
 names(residseach)
 
 #add 
@@ -65,18 +64,12 @@ yvarnames<-c(
   "RES_logColumellalengthmmlogHeadmassg"      ,
   "RES_logColumellavolumemm3logHeadmassg"     ,"PC1")
 
-
-
-#pointrange<-subset(longdfplotting,longdfplotting$earmeasuresresid==yvarnames[4])  %>% group_by(order) %>% 
-#    summarize(mn = mean(earmeasureval, na.rm = T), sd = sd(earmeasureval, na.rm = T)/n())
-
-
-
+#create functions for plotting
 source("Tblog.R")
 #add medians
 source("add median.R")
 
-#make the order-level cladogram for aligning the residuals
+#############make the order-level cladogram for aligning the residuals###########
 source("Order_level_cladogram.R")
 ###
 ggtree(orderPhy)+
@@ -87,11 +80,11 @@ gg_tr <- ggtree(orderPhy, branch.length = "none") +
   #scale_x_continuous(expand=expand_scale(0.2)) + # make more room for the labels
   scale_y_tree()+ 
   xlim(0,40)+
-  ylim(-3.5,26.5)+
-  geom_text(aes(x = 13,y = -0,label = "Terrestrial"))+
-  geom_text(aes(x = 13,y = -1,label = "Surface-foraging"))+
-  geom_text(aes(x = 13,y = -2,label = "Plunge-diving"))+
-  geom_text(aes(x = 13,y = -3,label = "Underwater-pursuit"))
+  ylim(-3.5,26.5)
+  #geom_text(aes(x = 13,y = -0,label = "Terrestrial"))+
+  #geom_text(aes(x = 13,y = -1,label = "Surface-foraging"))+
+  #geom_text(aes(x = 13,y = -2,label = "Plunge-diving"))+
+  #geom_text(aes(x = 13,y = -3,label = "Underwater-pursuit"))
 gg_tr
 
 #reversed phylogenetic tree
@@ -101,40 +94,43 @@ gg_tr_rev <- ggtree(orderPhy, branch.length = "none", col = "white") +
   scale_y_tree()+
   xlim(10,20)+
   ylim(-3.5,26.5)+
-  scale_x_reverse()+
-  geom_text(aes(x = 11,y = -0,label = "Terrestrial"))+
-  geom_text(aes(x = 11,y = -1,label = "Surface-foraging"))+
-  geom_text(aes(x = 11,y = -2,label = "Plunge-diving"))+
-  geom_text(aes(x = 11,y = -3,label = "Underwater-pursuit"))
+  scale_x_reverse()
+  #geom_text(aes(x = 11,y = -0,label = "Terrestrial"))+
+  #geom_text(aes(x = 11,y = -1,label = "Surface-foraging"))+
+  #geom_text(aes(x = 11,y = -2,label = "Plunge-diving"))+
+  #geom_text(aes(x = 11,y = -3,label = "Underwater-pursuit"))
 gg_tr_rev
 
-#plungedistinct
+###############scatterplot function###########
 gg_plungedistinct<-function(index2, letter, box = "yes"){
   ggtreeplot(gg_tr, subset(longdfplotting,
                            longdfplotting$earmeasuresresid==yvarnames[index2]), aes(y=earmeasureval), flip=TRUE) +{
     
-    if(box == "yes") geom_rect(aes(xmin = -3.5, xmax = 0.5, ymin = Inf, ymax = -Inf), fill = "grey", alpha = 0.1) else geom_rect(aes(xmin = 0.5, xmax = -4.5, ymin = Inf, ymax = -Inf), fill = "white", alpha = 0.001)
+    if(box == "yes") geom_rect(aes(xmin = -3.5, xmax = 26.5, ymin = Inf, ymax = -Inf), fill = "lightgrey", alpha = 0.5) else geom_rect(aes(xmin = 0.5, xmax = -4.5, ymin = Inf, ymax = -Inf), fill = "white", alpha = 0.001)
     } +
-    #  geom_vline(xintercept = -4:30, col = "grey")+
-    #geom_rect(aes(xmin = 9.5, xmax = 17.5, ymin = -Inf, ymax = -Inf), col = "black", fill = "white", alpha = 0.1)+
+    #geom_vline(xintercept = -4:30, col = "black")+
+    #geom_rect(aes(xmin = -3.5, xmax = 26.5, ymin = -Inf, ymax = -Inf), col = "black", fill = "white", alpha = 0.1)+
+    #geom_rect(aes(xmin = -3.5, xmax = 26.5, ymin = Inf, ymax = Inf), col = "black", fill = "white", alpha = 0.1)+
+    #geom_line(aes(xmin = -3.5, xmax = 26.5, ymin = 0, ymax = 0), col = "black", size = 1)+
+    geom_segment(aes(x = -3.5,xend = 26.5, y = 0, yend = 0), col = "black")+
     geom_point(aes(fill = plungedistinct), size = 2,shape = 21, col = "black")+
      scale_fill_manual(values = cbbPalette)+
+    geom_vline(xintercept = 0.5,col = "black")+
     coord_flip() + no_y_axis()+
     ylab("")+
     xlim(-3.5,26.5)+
-    geom_hline(yintercept = 0, col = "grey")+
     theme_classic() +
     theme(axis.line.y = element_blank(), 
           axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),
-          axis.text.x = element_text(angle = 90),
+          axis.text.x = element_text(angle = 90, colour = "black"),
           legend.position = "none",
           plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))+
     geom_boxplot(data = subset(longdfplotting,
                                longdfplotting$earmeasuresresid==yvarnames[index2]&
                                  longdfplotting$plungedistinct=="Terrestrial"),
-                 aes(x = 0, y = earmeasureval),fill= "white",outlier.size = 2,
+                 aes(x = 0, y = earmeasureval),fill= "white", col = "black", outlier.size = 2,
                  outlier.colour = "black", outlier.fill = "white",
                  outlier.shape = 21)+
     geom_text(aes(x=Inf,y=-Inf,vjust = 1,
@@ -142,46 +138,37 @@ gg_plungedistinct<-function(index2, letter, box = "yes"){
    }
 
 gg_plungedistinct(1, letter = "K",box = "no")
-
+addbxplt(1,1,"a")
 
 gg_plungedistinct(1, letter = "K", box = "yes")
 
-
+############function to add boxplots at bottom################
 addbxplt<-function(j,index2,letter,box = "yes"){
   d<-gg_plungedistinct(index2,letter,box)+
   geom_boxplot(data = subset(longdfplotting,
                              longdfplotting$earmeasuresresid==yvarnames[j]&
                                longdfplotting$plungedistinct=="Plunging"),
-               aes(x = -2, y = earmeasureval),fill= "black",outlier.size = 2,
+               aes(x = -2, y = earmeasureval),fill= "black",col = "black", outlier.size = 2,
                outlier.fill = "#000000", outlier.shape = 21, outlier.color = "black")+
   geom_boxplot(data = subset(longdfplotting,
                              longdfplotting$earmeasuresresid==yvarnames[j]&
                                longdfplotting$plungedistinct=="Underwater pursuit"),
-               aes(x = -3, y = earmeasureval),fill ="#56B4E9",outlier.size = 2,
+               aes(x = -3, y = earmeasureval),fill ="#56B4E9",col = "black", outlier.size = 2,
                outlier.fill = "#56B4E9", outlier.shape = 21, outlier.color = "black")+
     
     geom_boxplot(data = subset(longdfplotting,
                                longdfplotting$earmeasuresresid==yvarnames[j]&
                                  longdfplotting$plungedistinct=="Surface"),
-                 mapping = aes(x = -1, y = earmeasureval), fill = "#E69F00",
+                 mapping = aes(x = -1, y = earmeasureval), fill = "#E69F00",col = "black", 
                  outlier.size = 2, outlier.fill = "#E69F00", outlier.shape = 21, outlier.color = "black")
   
     
   d
 }
 
-#one row, modified proportions
-gg_tr|addbxplt(1,1,"a")+addbxplt(2,2,"b")|
-  addbxplt(3,3,"c")+addbxplt(4,4,"d")|#
-    addbxplt(5,5,"e")+addbxplt(6,6,"f")|#umbo height and TM angle
-  addbxplt(8,8,"g")+addbxplt(9,9,"h", box = "no")|#ESlength & RW 
-  addbxplt(7,7,"i")+addbxplt(11,11,"j")|#CA and collenght
-    addbxplt(12,12,"k", box = "no")+addbxplt(10,10,"l")|#colvol and air
-  IACfull("l")+IBPfull("m")|gg_tr_rev
 
-gg_tr+IBPfull("g")
 
-#connectivity plots
+#####################plots for interaural canal an interbullar passage#######333
 #data for plotting by order
 summ2<-avgdf %>% group_by(Order,IBP_detail) %>% count(na.omit = T) 
 summ2$IBP_detail<-ifelse(summ2$IBP_detail=="Pneumaticity present"|
@@ -215,13 +202,13 @@ IBP<-function(letter){
     xlim(-3.5,26.5)+
     coord_flip() + no_y_axis()+
     theme(axis.text.x = element_text(angle = 90))+
-    #ylab("Percentage of counts by group")+
+    ylab("")+
     theme_classic() +
     theme(axis.line.y = element_blank(), 
           axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),
-          axis.text.x = element_text(angle = 90),
+          axis.text.x = element_text(angle = 90, colour = "black"),
           legend.position = "none",
           plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))+
     geom_text(aes(x=Inf,y=-Inf,vjust = 1,
@@ -279,13 +266,13 @@ IAC<-function(letter){
     xlim(-3.5,26.5)+
     coord_flip() + no_y_axis()+
     theme(axis.text.x = element_text(angle = 90))+
-    #ylab("Percentage of counts by group")+
+    ylab("")+
     theme_classic() +
     theme(axis.line.y = element_blank(), 
           axis.title.y = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),
-          axis.text.x = element_text(angle = 90),
+          axis.text.x = element_text(angle = 90, colour = "black"),
           legend.position = "none",
           plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))+
     geom_text(aes(x=Inf,y=-Inf,vjust = 1,
@@ -309,3 +296,13 @@ IACfull<-function(letter){
              aes(x = -1, fill = IAC_detail),col = "black", position = "fill")
 }
 IACfull("m")
+
+
+###################Plot all together#######################
+gg_tr|addbxplt(1,1,"a")+addbxplt(2,2,"b")|
+  addbxplt(3,3,"c")+addbxplt(4,4,"d")|#
+  addbxplt(5,5,"e")+addbxplt(6,6,"f")|#umbo height and TM angle
+  addbxplt(8,8,"g")+addbxplt(9,9,"h", box = "no")|#ESlength & RW 
+  addbxplt(7,7,"i")+addbxplt(11,11,"j")|#CA and collenght
+  addbxplt(12,12,"k", box = "no")+addbxplt(10,10,"l")|#colvol and air
+  IACfull("m")+IBPfull("n")|gg_tr_rev

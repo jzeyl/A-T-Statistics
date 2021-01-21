@@ -11,7 +11,7 @@ pgls_models<-function(i){
 }
 
 
-#########################################run different pgls models and save as a list of tables 
+###########run different pgls models and save as a list of tables########
 ############Each table being the stats results for a different ear measure
 source("pgls_HM.R") #
 source("pgls_HM_plus_ecol.R") #
@@ -36,11 +36,11 @@ for (i in 1:length(tbllist_HM)){
                                   tbllist_HM_plus_divescore[[i]],tbllist_HM_times_divescore[[i]])                   #,
 }
 
-#The following remaining code does two things: 
+##########The following remaining code does two things:############### 
 #(1) get the AIC values to select the best model
 #(2)report the details of the best models (models with change AIC)
 
-#(1)###########Get the summary stats for each model############
+############(1)Get the summary stats for each model############
 #Compute the AIC, relative likelihood and AIC weight
 add_AIC<-list()
 
@@ -79,7 +79,7 @@ flexall<-flextable(all) %>% add_header_lines(
   autofit()
 flexall
 
-#write table to word file
+######write table to word file####
 toprint<-read_docx() #create word doc object
 body_add_flextable(toprint,flexall)#add pgls output table
 body_end_section_landscape(toprint)
@@ -89,7 +89,7 @@ print(toprint,target = "D:/Analysis_plots/AIC best model Dec 9 no terr.docx")
 print(toprint,target = "D:/Analysis_plots/AIC Dec 1 compare_terr.docx")
 
 
-#(2)#######Get model details for best model###########
+########(2)Get model details for best model###########
 #arrange rows by AIC, low to high
 details<-list()
 for (i in 1:length(add_AIC)){
@@ -118,7 +118,7 @@ bold(i = ~ P.val < 0.05) %>% # select columns add: j = ~ Coefficients + P.val
 autofit()
 flexall
 
-#print to word file
+#######print to word file###########
 toprint<-read_docx() #create word doc object
 body_add_flextable(toprint,flexall)#add pgls output table
 body_end_section_landscape(toprint)

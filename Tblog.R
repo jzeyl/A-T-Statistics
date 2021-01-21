@@ -1,30 +1,9 @@
+#code used from
+
 library(ggtree)
 library(patchwork)
 
-# a tree
-#set.seed(1338)tr <- rtree(10)
-# and some dummy data
-#df1 <- tibble(
-#  # only some labels match
-#  label = c(tr$tip.label[sample(6, 6)], "u9", "v9"),
-#  value = label %>% str_sub(2) %>% as.numeric)
-#df2 <- tibble(
-#  label = rep(tr$tip.label, 4),
-#  category = rep(1:4, each=10),
-#  value = rnorm(40, 0, 3))
-
 no_legend <- function() theme(legend.position="none")
-
-# plot the tree,
-#gg_tr <- ggtree(tr) + geom_tiplab(align=TRUE) +
-#  scale_x_continuous(expand=expand_scale(0.2)) # make more room for the labels
-## the data points, the histogram and the heatmap
-#gg_hist <- ggplot(df1, aes(label, value)) +
-#  geom_col(aes(fill=substr(label, 1, 1))) + no_legend()
-#gg_heat <- ggplot(df2, aes(category, label)) + geom_tile(aes(fill=value)) +
-#  scale_fill_gradient2() + no_legend()
-#
-#gg_tr + gg_hist + gg_heat + plot_annotation(tag_levels="A")
 
 tree_y <-  function(ggtree, data){
   if(!inherits(ggtree, "ggtree"))
@@ -32,19 +11,6 @@ tree_y <-  function(ggtree, data){
   left_join(select(data, label), select(ggtree$data, label, y)) %>%
     pull(y)
 }
-
-# replot histogram and heatmap, match the y-coords to the tree
-#gg_hist <- ggplot(df1, aes(tree_y(gg_tr, df1), value)) +
-#  geom_col(aes(fill=substr(label, 1, 1))) + no_legend() +
-#  coord_flip() # flip this plot
-#gg_heat <- ggplot(df2, aes(category, y=tree_y(gg_tr, df2))) +
-#  geom_tile(aes(fill=value)) +
-#  scale_fill_gradient2() + no_legend()
-#
-#gg_tr + gg_hist + gg_heat + plot_annotation(tag_levels="A")
-#
-#ggsave("img/ggtree-composite-2.png", type='cairo', width=8, height=4)
-
 
 # overwrite the default expand for continuous scales
 scale_y_tree <- function(expand=expand_scale(0, 0.6), ...){
@@ -92,17 +58,3 @@ no_y_axis <- function ()
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())
 
-#ggsave("img/ggtree-composite-1.png", type='cairo', width=8, height=4)
-#
-#gg_tr <- ggtree(tr) + geom_tiplab(align=TRUE) +
-#  scale_x_continuous(expand=expand_scale(0.2)) + # make more room for the labels
-#  scale_y_tree()
-#gg_hist <- ggtreeplot(gg_tr, df1, aes(y=value), flip=TRUE) +
-#  geom_col(aes(fill=substr(label, 1, 1))) + no_legend() +
-#  coord_flip() + no_y_axis()
-#gg_heat <- ggtreeplot(gg_tr, df2, aes(x=category)) + geom_tile(aes(fill=value)) +
-#  scale_fill_gradient2() + no_legend() + no_y_axis() 
-#
-#gg_tr + gg_hist + gg_heat + plot_annotation(tag_levels="A")
-#
-#ggsave("img/ggtree-composite-3.png", type='cairo', width=8, height=4)

@@ -6,7 +6,7 @@ library(ggpubr)
 library(ggplot2)
 library(stringr)
 
-#get models that only like head mass and the variable
+#get models for simple linear regression between head mass and each auditory variable
 pgls_todo_hm<-pgls_todo_nogeomet[seq(2,length(pgls_todo_nogeomet),2)]
 
 #make comparative data object for caper

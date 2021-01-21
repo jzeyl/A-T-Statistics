@@ -1,9 +1,5 @@
 divedf<-read.csv(file.choose())
 divedf<-divedf[1:57,]
-#unique(divedf$Categories_feeding)
-#ggpairs(log(divedf[7:10]))
-#ggcorr(log(divedf[7:10]))
-
 
 #SURFACE
 divedf$feedmode2<-NA #reduce ecological groups
@@ -23,8 +19,6 @@ divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface plunging", "Plungin
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Pursuit plunging", "Plunging", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface plunging", "Plunging", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface plunging", "Plunging", divedf$feedmode2)
-
-
 
 #species that didn't match
 #ind<-which(divedf$IOC_2020_Binomial %in% avgdf$Binomial == T)#corresponding row number in main dataframe
@@ -59,12 +53,3 @@ avgdf$Reference_depth[match(divedf$IOC_2020_Binomial,avgdf$Binomial)]<-as.charac
 avgdf$Reference_duration<-NA
 avgdf$Reference_duration[match(divedf$IOC_2020_Binomial,avgdf$Binomial)]<-as.character(divedf$Reference_duration)
 
-
-#avgdf$Category[which(avgdf$Category=="Pursuit diving")]<-"Underwater pursuit"
-#avgdf$Category[which(avgdf$Category=="Surface foraging")]<-"Surface"
-##avgdf$Category<-as.character(avgdf$Category)
-#avgdf$Category<-as.factor(avgdf$Category)
-#avgdf$Category<-relevel(avgdf$Category, ref = "Terrestrial")
-
-#avgdf$plungeT<-as.character(avgdf$plungedistinct)
-#avgdf$plungeT[which(is.na(avgdf$plungedistinct))]<-"Terrestrial"

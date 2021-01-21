@@ -1,6 +1,6 @@
 pgls_todo_hm<-pgls_todo_nogeomet[seq(2,length(pgls_todo_nogeomet),2)]
 
-#Head mass only
+#Model list with head mass as only independent variable
 modellist<-pgls_todo_hm
 pgls_models_list<-lapply(pgls_todo_hm,pgls_models)#run pgls
 

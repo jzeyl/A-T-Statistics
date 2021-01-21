@@ -7,7 +7,7 @@ library(ggplot2)
 library(tidyr)
 
 #set working directory and load data
-setwd("D:/ATclone/A_T-stats")
+setwd("E:/ATclone/A_T-stats")
 
 #load main dataframe
 df<-read.csv(file.choose(), stringsAsFactors = F, header = T) #, stringsAsFactors = FALSE
@@ -16,7 +16,7 @@ df<-read.csv(file.choose(), stringsAsFactors = F, header = T) #, stringsAsFactor
 pgls_models<-function(i){
   pglsfit<-pgls(as.formula(i), data = birdCDO, #check comparative data object here<---
                 lambda = 'ML', #find lambda using maximum likelihood
-                bounds = list(lambda=c(0.0001,1)))#####
+                bounds = list(lambda=c(0.0001,1)))
 }
 
 #note some missing headmass values to be imputed
@@ -30,8 +30,7 @@ source("SW_HM_.R")#add phylogeney here
 df$Head.mass..g.
 
 #Since PGLS uses one point per species,I make the dataframe to have average values for species with more than one specimen:
-
-#First I make a dataframe with only one species per line
+#First make a dataframe with only one species per line
 distinctdf<-distinct(df, Binomial, .keep_all = TRUE)
 distinctdforder<-arrange(distinctdf,Binomial)#sort by species name
 
@@ -113,7 +112,7 @@ pgls_todo_nogeomet <- c("log(TMtotalarea)~log(Skull.width..mm.)",
 pgls_todo_hm<-pgls_todo_nogeomet[seq(2,length(pgls_todo_nogeomet),2)]
 
 #############################################################################################
-################### caper data object for aquatic-only analyses -----------------------------
+################### Data object for aquatic-only analyses -----------------------------
 birdCDO<-comparative.data(phy = birdtreels,data = avgdf[avgdf$Category!="Terrestrial",],
                           names.col = Binomial, 
                           vcv = TRUE, na.omit = FALSE, 

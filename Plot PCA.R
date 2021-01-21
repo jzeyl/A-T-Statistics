@@ -5,7 +5,7 @@ library(viridis)
 library(colorspace)
 library(forcats)
 
-#SCREE PLOT
+##############################SCREE PLOT################
 d<-as.data.frame(diag(pPCA$Eval)/sum(pPCA$Eval)*100)
 d$PC1<-row.names(d)
 d$percentexplained<-d$`diag(pPCA$Eval)/sum(pPCA$Eval) * 100`
@@ -17,7 +17,7 @@ p<-ggplot(d, aes(x = reorder(PC1,-percentexplained), y = percentexplained))+
   ylab("Percent variance \n explained")
 p
 
-#Make a grouping of orders that includes species with one underwater-pursuit species
+################Make a grouping of orders that includes species with one underwater-pursuit species#####################
 speciesPCAvalues$Order<-as.character(speciesPCAvalues$Order)
 speciesPCAvalues$Order2<-NA
 speciesPCAvalues$Order2[
@@ -36,21 +36,21 @@ speciesPCAvalues$Order2[
             speciesPCAvalues$Order=="Suliformes"
     )]
 
-#Create columns in the PCA dataset for different groupings
+####################Create columns in the PCA dataset for different groupings#################
 speciesPCAvalues$Binomial<-as.factor(dfwithresids[match(row.names(speciesPCAvalues),
-                                                        dfwithresids$Binomial),"Binomial"])#<-------------<-------
+                                                        dfwithresids$Binomial),"Binomial"])#
 speciesPCAvalues$Order<-as.factor(dfwithresids[match(row.names(speciesPCAvalues),
-                                                     dfwithresids$Binomial),"Order"])#<-------------<-------
+                                                     dfwithresids$Binomial),"Order"])#
 speciesPCAvalues$divescore<-as.factor(dfwithresids[match(row.names(speciesPCAvalues),
-                                                     dfwithresids$Binomial),"divescore"])#<-------------<-------
+                                                     dfwithresids$Binomial),"divescore"])#
 speciesPCAvalues$plungedistinct<-as.factor(dfwithresids[match(row.names(speciesPCAvalues),
-                                                     dfwithresids$Binomial),"plungedistinct"])#<-------------<-------
+                                                     dfwithresids$Binomial),"plungedistinct"])#
 speciesPCAvalues$plungedistinct<-relevel(as.factor(speciesPCAvalues$plungedistinct),"Terrestrial")
 speciesPCAvalues$divescore<-as.numeric(as.character(speciesPCAvalues$divescore))
 speciesPCAvalues$IAC<-avgdf$IAC_detail[match(row.names(speciesPCAvalues),avgdf$Binomial)]
 speciesPCAvalues$IBP<-avgdf$IBP_detail[match(row.names(speciesPCAvalues),avgdf$Binomial)]
 
-#Categories to label species of particular interest
+##########################Categories to label species of particular interest################
 speciesPCAvalues$Binomial0<-ifelse(grepl("Phalacrocorax", speciesPCAvalues$Binomial),as.character(speciesPCAvalues$Binomial),"")
 speciesPCAvalues$Binomial2<-ifelse(grepl("Tyto", speciesPCAvalues$Binomial),as.character(speciesPCAvalues$Binomial),"")
 speciesPCAvalues$Binomial2<-ifelse(grepl("Bubo", speciesPCAvalues$Binomial),as.character(speciesPCAvalues$Binomial),speciesPCAvalues$Binomial2)
@@ -72,10 +72,11 @@ speciesPCAvalues$Order3<-ifelse(grepl("Anseriformes", speciesPCAvalues$Order),as
 speciesPCAvalues$divescore<-as.factor(speciesPCAvalues$divescore)
 
 ######################plot PC1 vs PC2 coloured by different factors
-###############BIPLOT BASIC FUNCTION####################
 
+###color palettes####
 qualitative_hcl(5, palette = "Dark 3")
 
+###############BIPLOT BASIC FUNCTION####################
 runPCAplot<-function(group, p1,p2,n1,n2){
 scattercat1<-ggplot(speciesPCAvalues, aes_string(x = p1, y = p2, label = "Binomial")) +
   theme_classic()+
@@ -111,7 +112,9 @@ runPCAplot("Order2","PC1","PC2",1,2)
 #set up color palette
 mypal <- colorRampPalette(brewer.pal(6, "Blues"))
 qualitative_hcl(5, palette = "Dark 3")
-#plot by orders
+
+
+##############plot by orders##################
 speciesPCAvalues$Order2 <- fct_explicit_na(as.factor(speciesPCAvalues$Order2))
 speciesPCAvalues$Order2 <-relevel(speciesPCAvalues$Order2,ref = "(Missing)")
 
@@ -139,7 +142,7 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 # The palette with black:
 cbbPalette <- c(	"#FFFFFF","#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
-
+#########plot by aquatic groupings################
 runPCAplotPlunge<-function(group, p1,p2,n1,n2){
   scattercat1<-ggplot(speciesPCAvalues, aes_string(x = p1, y = p2, label = "Binomial")) +
     theme_classic()+
@@ -174,7 +177,7 @@ plunge<-runPCAplotPlunge("plungedistinct","PC1","PC2",1,2)+
   geom_text(aes(label = Binomial0))
 plunge 
 
-#plot by dive score
+####################plot by dive score##############
 #mypal <- colorRampPalette(rev(brewer.pal(6, "Blues")))
 sequential_hcl(5, palette = "Purple-Blue", rev = T)
 BLUE<-c("white","#d0d1e6",
@@ -186,6 +189,9 @@ BLUE<-c("white","#d0d1e6",
 divecol<-c("white",sequential_hcl(6, palette = "Purple-Blue",rev = T)[2:6])
 
 speciesPCAvalues$divescore <- fct_explicit_na(speciesPCAvalues$divescore)
+speciesPCAvalues$divescore<-relevel(speciesPCAvalues$divescore,ref = "(Missing)")
+
+
 
 runPCAplotdive<-function(group, p1,p2,n1,n2){
   scattercat1<-ggplot(speciesPCAvalues, aes_string(x = p1, y = p2, label = "Binomial")) +
@@ -225,7 +231,7 @@ divescore
 
   
 
-########plot LOADINGS
+########plot LOADINGS###############
 pPCAloadings$factor<-row.names(pPCAloadings)
 pPCAloadings$factor<-gsub("RES_log"," ",pPCAloadings$factor)
 pPCAloadings$factor<-gsub("logHeadmassg","",pPCAloadings$factor)
@@ -245,14 +251,8 @@ loadings1<-ggplot(pPCAloadings, aes(x = PC1, y = PC2, label =factor)) +
   theme(legend.position = "bottom")
 loadings1
 
-loads<-loadings1+ annotation_custom(ggplotGrob(p), xmin = 0.4, xmax = 1, 
-                  ymin = 0.2, ymax = 1)
 
 ggarrange(loadings1,plunge,divescore, order,labels = c("A","B","C","D"))
-
-ggarrange(loadings1,p,
-          order,cat,
-          labels = c("A","B","C","D","E","F"),nrow = 2, ncol = 2)
 
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_noair.pdf",width = 10, height = 10)
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_withair.pdf",width = 10, height = 10)
