@@ -1,4 +1,4 @@
-divedf<-read.csv(file.choose())
+divedf<-read.csv("Depth list.csv")
 divedf<-divedf[1:57,]
 
 #SURFACE

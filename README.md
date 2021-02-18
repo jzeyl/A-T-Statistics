@@ -10,7 +10,7 @@ Dive depth data:  "Depth list.csv"
 The column names of the main dataframe are described here: 
 >"columnnames.csv""
 
-## 2. Setting up the data
+## 2. Setting up the analyses
 The script to import data and set things up in the right format for analyses is:
 > Set up data.R
 
@@ -23,7 +23,7 @@ This script loads the dataframe with auditory measurements, the phylogeny, and t
 
 ## 3. pPCA analses
 These scripts run the pPCAs and plots the pPCA results.  
-> "Run phyPCA.R"   (calls "Extract pgls residuals.R" to get residuals for input)    
+> "Run phyPCA.R"   (calls "Extract pgls residuals.R" to get the residuals used for input for the pPCA)    
 "Plot PCA.R"  
 
 ## 4. PGLS analyses

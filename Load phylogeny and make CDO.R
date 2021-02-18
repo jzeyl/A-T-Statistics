@@ -1,5 +1,5 @@
 #load phylogeny and set up pgls analysis
-birdtree<-read.tree(file.choose())
+birdtree<-read.tree("JZ tree Prum merged hackett.tree")
 birdtree<-drop.tip(birdtree,c("Alle_alle","Phalacrocorax_auritus"))
 birdtree$tip.label<-as.character(birdtree$tip.label)
 birdtreels<-birdtree

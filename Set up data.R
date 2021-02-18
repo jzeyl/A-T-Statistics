@@ -10,16 +10,16 @@ library(tidyr)
 setwd("E:/ATclone/A_T-stats")
 
 #load main dataframe
-df<-read.csv(file.choose(), stringsAsFactors = F, header = T) #, stringsAsFactors = FALSE
+df<-read.csv("data Nov 17_.csv", stringsAsFactors = F, header = T) #, stringsAsFactors = FALSE
 
-#The pgls model function, which will be applied to list of formulas
+#####The pgls model function, which will be applied to list of formulas###
 pgls_models<-function(i){
   pglsfit<-pgls(as.formula(i), data = birdCDO, #check comparative data object here<---
                 lambda = 'ML', #find lambda using maximum likelihood
                 bounds = list(lambda=c(0.0001,1)))
 }
 
-#note some missing headmass values to be imputed
+#note some missing headmass values now imputed
 df$Head.mass..g.
 
 #load phylogeny and correct names that were different between birdtree.org and the up-to-date species names
@@ -111,7 +111,7 @@ pgls_todo_nogeomet <- c("log(TMtotalarea)~log(Skull.width..mm.)",
 #select models with head mass
 pgls_todo_hm<-pgls_todo_nogeomet[seq(2,length(pgls_todo_nogeomet),2)]
 
-#############################################################################################
+
 ################### Data object for aquatic-only analyses -----------------------------
 birdCDO<-comparative.data(phy = birdtreels,data = avgdf[avgdf$Category!="Terrestrial",],
                           names.col = Binomial, 
@@ -125,4 +125,4 @@ birdCDO$dropped
 birdCDO$data$plungedistinct<-droplevels(birdCDO$data$plungedistinct, exclude = "Terrestrial")
 levels(birdCDO$data$plungedistinct)
 birdCDO$data$plungedistinct<-relevel(birdCDO$data$plungedistinct, ref = "Surface")
-############################################################################################
+
