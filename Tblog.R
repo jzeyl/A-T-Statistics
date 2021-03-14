@@ -1,4 +1,4 @@
-#code used from
+#code based on functions from: https://thackl.github.io/ggtree-composite-plots
 
 library(ggtree)
 library(patchwork)

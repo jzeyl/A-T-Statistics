@@ -5,16 +5,14 @@ library(colorspace)
 divecol<-c(sequential_hcl(6, palette = "Purple-Blue",rev = T)[2:6])
 
 
-#count # in each order
+#count number of orders present in the full phylogenetic tree
 orderdf<-avgdf %>% count(Order)
 
-#distinct df
+#make a phylogeny with each unique order present
 g2<-avgdf[!duplicated(avgdf$Order),]#orders only
 g2order<-arrange(g2,Order)#sort to match order df
 g2order$n<-orderdf$n#attach number of species in order
 str(g2order$Binomial)
-#drop timps for order
-
 g2order$full<-paste0(g2order$Order," (",as.character(g2order$n),")")
 g2order$Order<-as.character(g2order$Order)
 
@@ -23,7 +21,7 @@ mypal <- colorRampPalette(brewer.pal(6, "Blues"))
 mypal2 <- colorRampPalette(brewer.pal(6, "YlOrRd"))
 
 
-#clade labels
+#make clade labels
 A<-findMRCA(birdtreels,avgdf$Binomial[avgdf$Order=="Passeriformes"])
 B<-findMRCA(birdtreels,avgdf$Binomial[avgdf$Order=="Charadriiformes"])
 C<-findMRCA(birdtreels,avgdf$Binomial[avgdf$Order=="Falconiformes"])
@@ -42,7 +40,7 @@ O<-findMRCA(birdtreels,avgdf$Binomial[avgdf$Order=="Strigiformes"])
 P<-findMRCA(birdtreels,avgdf$Binomial[avgdf$Order=="Anseriformes"])
 
 
-
+#plot
 p<-ggtree(birdtreels, layout = "circular", open.angle = 150) %<+% avgdf + ###########, layout = "circular"
   #geom_tiplab(aes(label = Binomial2), linesize = 0.1, offset = 4) + #circular
   #geom_text(aes(label = node))+
@@ -95,7 +93,7 @@ p<-ggtree(birdtreels, layout = "circular", open.angle = 150) %<+% avgdf + ######
   geom_strip(g2order$Binomial[5], g2order$Binomial[5], offset=16, offset.text=15, hjust=0, fontsize=3,
              label=g2order$full[5])
 p
-###########ESSENTIAL to change row names forheatmap
+###########ESSENTIAL step to change row names forheatmap#############
 rownames(avgdf)<-avgdf$Binomial
 
 # The palette with black:
@@ -106,7 +104,8 @@ BLUE<-c("#d0d1e6",
         "#74a9cf",
         "#2b8cbe",
         "#045a8d")
-#add heatmap
+
+#add heatmap to circular phylogeny
 k<-gheatmap(p,avgdf[,c("plungedistinct","divescore")], #"Category",
             width = 0.25, offset = 0,
             color = "black",
@@ -125,13 +124,13 @@ l
 ggsave("D:/Analysis_plots/ecolcircle.pdf", width=10, height=10)
 
 
-#############plot sampling 
+#############plot heatmap showing sampling of all auditory traits (supplemental materials)#####333
 avgdf$Binomial2<-avgdf$Binomial
 
 a<-ggtree(birdtreels) %<+% avgdf + ###########, layout = "circular"
   geom_tiplab(aes(label = Binomial2), linesize = 0.1, offset = 30) + #circular
   #geom_text(aes(label = node))+
-  xlim(NA, 300) + 
+  xlim(NA, 160) + 
   ylim(NA,140) 
 a  
 

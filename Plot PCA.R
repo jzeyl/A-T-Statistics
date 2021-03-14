@@ -10,12 +10,41 @@ d<-as.data.frame(diag(pPCA$Eval)/sum(pPCA$Eval)*100)
 d$PC1<-row.names(d)
 d$percentexplained<-d$`diag(pPCA$Eval)/sum(pPCA$Eval) * 100`
 
+
+#eigenvalue plot
 p<-ggplot(d, aes(x = reorder(PC1,-percentexplained), y = percentexplained))+
-  geom_bar(stat = "identity")+
-  theme_classic()+
+  geom_bar(stat = "identity", col = "white")+
+  theme_minimal()+
   xlab("Principal component")+
   ylab("Percent variance \n explained")
 p
+
+#remove lavels for inset plot
+p<-ggplot(d[1:6,], aes(x = reorder(PC1,-percentexplained), y = percentexplained))+
+  geom_bar(stat = "identity")+
+  theme_classic()+
+  xlab("")+
+  ylab("")+
+  theme(axis.text.x = element_blank(),
+        axis.text.x = element_text(angle = 90),
+        panel.background = element_blank(),
+        panel.grid = element_blank())
+p
+
+
+themejz<-function (base_size = 11, base_family = "", base_line_size = base_size/22, 
+                   base_rect_size = base_size/22) 
+{
+  theme_grey(base_size = base_size, base_family = base_family, 
+             base_line_size = base_line_size, base_rect_size = base_rect_size) %+replace% 
+    theme(panel.background = element_blank(), panel.border = element_rect(), panel.grid = element_line(), 
+          panel.grid.minor = element_blank(), 
+          strip.background = element_rect(fill = "grey85", 
+                                          colour = "grey20"), legend.key = element_rect(fill = "white", 
+                                                                                        colour = NA), complete = TRUE)
+}
+
+
 
 ################Make a grouping of orders that includes species with one underwater-pursuit species#####################
 speciesPCAvalues$Order<-as.character(speciesPCAvalues$Order)
@@ -238,8 +267,8 @@ pPCAloadings$factor<-gsub("logHeadmassg","",pPCAloadings$factor)
 
 
 loadings1<-ggplot(pPCAloadings, aes(x = PC1, y = PC2, label =factor)) +
-  xlab(label = "pPC1")+
-  ylab(label = "pPC2")+
+  xlab(label = "pPC1(43.4%)")+
+  ylab(label = "pPC2(14%)")+
   
   #geom_point(aes(), size = 0.005) +
   #geom_point(data = pPCAloadings)+
@@ -251,8 +280,13 @@ loadings1<-ggplot(pPCAloadings, aes(x = PC1, y = PC2, label =factor)) +
   theme(legend.position = "bottom")
 loadings1
 
+loadings2<-loadings1 + annotation_custom(ggplotGrob(p), 
+                                         xmin = 0.25, xmax = 1, 
+                       ymin = 0, ymax = 1)
+loadings2
 
-ggarrange(loadings1,plunge,divescore, order,labels = c("A","B","C","D"))
+ggarrange(loadings2,plunge,divescore, order,
+          labels = c("A","B","C","D"))
 
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_noair.pdf",width = 10, height = 10)
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_withair.pdf",width = 10, height = 10)

@@ -1,9 +1,9 @@
 
 # A_T-stats
-
+[![DOI](https://zenodo.org/badge/313591727.svg)](https://zenodo.org/badge/latestdoi/313591727)
 ## 1. Data files
-There are 3 data files:  
->Main dataframe:  "data Nov 17_.csv"    
+There are three data files:  
+>Main dataframe:  "Eardata.csv"    
 Phylogeny:  "JZ tree Prum merged hackett.tree"  
 Dive depth data:  "Depth list.csv"  
 
@@ -50,4 +50,6 @@ This runs the analysis comparing. There is a separate script for the interaural 
 
 ## 7. Other plotting scripts
 > "plot ecology on circular phylogeny.R" - plot ecological groupings on circular phylogeny (Fig 2), and sampling by phylogeny (Fig S2)  
-"Residualphylogplots.R - plotting residual plot (Fig 3)
+"Residualphylogplots_a panel top.R - plotting residual plot (Fig 3)
+
+

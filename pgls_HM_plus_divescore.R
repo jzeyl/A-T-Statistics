@@ -22,16 +22,7 @@ for(i in seq_along(tbllist_HM_plus_divescore)){
   character_cols<-unlist(lapply(tbllist_HM_plus_divescore[[i]], is.character))
   numeric_cols <- unlist(lapply(tbllist_HM_plus_divescore[[i]], is.numeric))# Identify numeric columns
   tbllist_HM_plus_divescore[[i]]<-cbind(tbllist_HM_plus_divescore[[i]][,which(character_cols)],signif(tbllist_HM_plus_divescore[[i]][,which(numeric_cols)], digits = 2))
-  #tbllist_HM_plus_divescore[[i]] <- tbllist_HM_plus_divescore[[i]][, c(6,11,8:10,7,5,1:4)]#change order of columns
-  #dplyr::select_if(tbllist_HM_plus_divescore[[i]], is.numeric)#select only numeric data
-  colnames(tbllist_HM_plus_divescore[[i]])[6]<-"P.val"#rename b/c flextable doesn't work will with the '>' sign
-  #tbllist_HM_plus_divescore[[i]]$Fstat[2:nrow(tbllist_HM_plus_divescore[[i]])]<-""
-  #tbllist_HM_plus_divescore[[i]]$Fstat_numdf[2:nrow(tbllist_HM_plus_divescore[[i]])]<-""
-  #tbllist_HM_plus_divescore[[i]]$Fstat_dendf[2:nrow(tbllist_HM_plus_divescore[[i]])]<-" "
-  ##tbllist_HM_plus_divescore[[i]]$Model[2:nrow(tbllist_HM_plus_divescore[[i]])]<-""
-  #tbllist_HM_plus_divescore[[i]]$Lambda[2:nrow(tbllist_HM_plus_divescore[[i]])]<-""
-  #tbllist_HM_plus_divescore[[i]]$Adj_Rsquared[2:nrow(tbllist_HM_plus_divescore[[i]])]<-""
-  #tbllist_HM_plus_divescore[[i]]$AICc[2:nrow(tbllist_HM_plus_divescore[[i]])]<-""
-  row.names(tbllist_HM_plus_divescore[[i]])<-c()#remove row names
+   colnames(tbllist_HM_plus_divescore[[i]])[6]<-"P.val"#rename b/c flextable doesn't work will with the '>' sign
+   row.names(tbllist_HM_plus_divescore[[i]])<-c()#remove row names
   print(tbllist_HM_plus_divescore[[i]])
 }

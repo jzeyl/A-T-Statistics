@@ -4,14 +4,12 @@ pglsfit<-pgls(log(distinctdf$Head.mass..g.)~log(distinctdf$Skull.width..mm.), da
               bounds = list(lambda=c(0.00001,1)))
 print(summary(pglsfit))
 
-
-
-#ones without headmass
+#Show species with no head massdata available
 length(df$Binomial[which(is.na(df$Head.mass..g.))])
 #nrow(df[which(is.na(df$Head.mass..g.)),])
 #df$Binomial[which(is.na(df$Skull.width..mm.))]
 
-#add imputed head mass that are NA from the specimen's skull width
+#add imputed head mass based on the specimen's skull width and the pgls regression
 df$Head.mass..g.[which(is.na(df$Head.mass..g.))]<-
   exp(log(df$Skull.width..mm.[which(is.na(df$Head.mass..g.))])*pglsfit$model$coef[2]+
         pglsfit$model$coef[1])#WCP

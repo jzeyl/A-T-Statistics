@@ -1,7 +1,8 @@
+#load dive data file
 divedf<-read.csv("Depth list.csv")
 divedf<-divedf[1:57,]
 
-#SURFACE
+#Classify SURFACE category from more detailed foraging modes
 divedf$feedmode2<-NA #reduce ecological groups
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Dipping", "Surface", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface seizing - plunge diving?", "Surface", divedf$feedmode2)
@@ -10,20 +11,17 @@ divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Pattering", "Surface", dive
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface seizing", "Surface", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface diving", "Surface", divedf$feedmode2)
 
-#UNDERWATER PURSUIT (non-plunging)
+#Classify UNDERWATER PURSUIT category from more detailed foraging modes
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Pursuit diving", "Underwater pursuit", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Shallow swimming", "Underwater pursuit", divedf$feedmode2)
 
-#PLUNGING (surface & pursuit plunging)
+#Classify PLUNGING (surface & pursuit plunging) category from more detailed foraging modes
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface plunging", "Plunging", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Pursuit plunging", "Plunging", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface plunging", "Plunging", divedf$feedmode2)
 divedf$feedmode2<-ifelse(divedf$Categories_feeding=="Surface plunging", "Plunging", divedf$feedmode2)
 
-#species that didn't match
-#ind<-which(divedf$IOC_2020_Binomial %in% avgdf$Binomial == T)#corresponding row number in main dataframe
-
-#check of all from divedf match to main df
+#Match the dive dataframe to the main dataframe by species name
 match(divedf$IOC_2020_Binomial,avgdf$Binomial) #a list of the rows in the main df.
 
 #add dive data to main df

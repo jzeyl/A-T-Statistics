@@ -1,7 +1,7 @@
 library(flextable)
 library(officer)
 
-options(scipen=999, digits = 3)# take out of scientific notation and allow 3 significant digist
+options(scipen=999, digits = 3)# take out of scientific notation and allow 3 significant digits
 
 ########################################pgls function####################################
 pgls_models<-function(i){
@@ -13,15 +13,15 @@ pgls_models<-function(i){
 
 ###########run different pgls models and save as a list of tables########
 ############Each table being the stats results for a different ear measure
-source("pgls_HM.R") #
-source("pgls_HM_plus_ecol.R") #
-source("pgls_HM_times_ecol.R") #
+source("pgls_HM.R") # model with only head mass
+source("pgls_HM_plus_ecol.R") #model with ecological groupings
+source("pgls_HM_times_ecol.R") #model with ecological groupings and groupin x head mass interaction term
 
 #for aquatic-only analysis, go back and create a new data object lacking Terrestrial species, and also include models with dive score:
-source("pgls_HM_plus_divescore.R") #
-source("pgls_HM_times_divescore.R") #
+source("pgls_HM_plus_divescore.R") #model with dive score
+source("pgls_HM_times_divescore.R") #model with divescore and head mass x dive score interaction
 
-####for each ear measure, combine together the different models single dataframe
+####for each ear measure, combine together the different model outputs into single dataframe
 grouped_eachmeasure<-list()
 for (i in 1:length(tbllist_HM)){
   grouped_eachmeasure[[i]]<-rbind(tbllist_HM[[i]],tbllist_HM_plus_ecol[[i]],
@@ -38,7 +38,7 @@ for (i in 1:length(tbllist_HM)){
 
 ##########The following remaining code does two things:############### 
 #(1) get the AIC values to select the best model
-#(2)report the details of the best models (models with change AIC)
+#(2) report the details of the best models (models with change AIC)
 
 ############(1)Get the summary stats for each model############
 #Compute the AIC, relative likelihood and AIC weight
@@ -70,7 +70,6 @@ all$Measurementgroup<-ifelse(grepl("Behind.TM",all$Model),"Airvolume",all$Measur
 all<-all[,c(ncol(all),(1:(ncol(all)-1)))]
 all$Measurementgroup[which(duplicated(all$Measurementgroup))]<-""
 all$F_<-paste0(all$Fstat,"(",all$Fstat_numdf,",",all$Fstat_dendf,")")
-
 
 #visualize the table better using the flextable package
 flexall<-flextable(all) %>% add_header_lines(

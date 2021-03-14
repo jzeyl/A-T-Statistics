@@ -11,7 +11,6 @@ names(dfwithresids)
 #isolate columns with residuals to be used in PCA
 PCAset<-dfwithresids[,37:48]# data to be used in PCA
 row.names(PCAset)<-dfwithresids$Binomial#species names need to be in row names for use of phy.PCA function
-
 names(PCAset)
 
 #remove air volume from PCA if desired (air volume has more missing values than other measures)

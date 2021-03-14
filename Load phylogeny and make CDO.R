@@ -8,7 +8,7 @@ birdtreels<-birdtree
 distinctdf<-distinct(df, Binomial, .keep_all = TRUE)
 distinctdforder<-arrange(distinctdf,Binomial)
 
-#put current correct binomials on the tree, updated from t he birdtree
+#put current correct binomials on the tree, updated from the birdtree
 new<-cbind.data.frame(birdtreels$tip.label,distinctdf$Binomial,gsub(" ","_",distinctdf$Birdtree))
 colnames(new)<-c("tiplabel","binomial","birdtree")
 #View(new)
@@ -20,7 +20,7 @@ str(birdtreels$tip.label)
 birdtreels$tip.label<-new$binomialordered
 birdtreels$tip.label<-as.character(birdtreels$tip.label)
 
-#make comparative data object for caper
+#make comparative data object for caper's pgls function
 birdCDO<-comparative.data(phy = birdtreels,data = distinctdf, #avgdf[avgdf$Category!="Terrestrial",]
                           names.col = Binomial, 
                           vcv = TRUE, na.omit = FALSE, 

@@ -67,7 +67,7 @@ yvarnames<-c(
 #create functions for plotting
 source("Tblog.R")
 #add medians
-source("add median.R")
+#source("add median.R")
 
 #############make the order-level cladogram for aligning the residuals###########
 source("Order_level_cladogram.R")
@@ -108,7 +108,7 @@ gg_plungedistinct<-function(index2, letter, box = "yes"){
   ggtreeplot(gg_tr, subset(longdfplotting,
                            longdfplotting$earmeasuresresid==yvarnames[index2]), aes(y=earmeasureval), flip=TRUE)  +{
     
-    if(box == "yes")   annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25)
+    if(box == "yes")   annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25, size = 5)
  else annotate("text",x = Inf, y = Inf, label = "", hjust = 2, vjust = 1.25)
     } +
    #geom_label(aes(x=Inf,y=-Inf,vjust = 1,
@@ -120,7 +120,7 @@ gg_plungedistinct<-function(index2, letter, box = "yes"){
     #geom_line(aes(xmin = -3.5, xmax = 26.5, ymin = 0, ymax = 0), col = "black", size = 1)+
     geom_segment(aes(x = 0.5,xend = 38, y = 0, yend = 0), col = "black")+
     #geom_segment(aes(x = 28,xend = 36, y = 0, yend = 0), col = "black")+
-    geom_point(aes(fill = plungedistinct), size = 2,shape = 21, col = "black")+
+    geom_point(aes(fill = plungedistinct), size = 3,shape = 21, col = "black")+
      scale_fill_manual(values = cbbPalette)+
     #geom_vline(xintercept = 27,col = "black")+
     
@@ -139,10 +139,10 @@ gg_plungedistinct<-function(index2, letter, box = "yes"){
     geom_boxplot(data = subset(longdfplotting,
                                longdfplotting$earmeasuresresid==yvarnames[index2]&
                                  longdfplotting$plungedistinct=="Terrestrial"),
-                 aes(x = 36, y = earmeasureval),fill= "white", col = "black", outlier.size = 2,
+                 aes(x = 36, y = earmeasureval),fill= "white", col = "black", outlier.size = 3,
                  outlier.colour = "black", width = 2.25, outlier.fill = "white",
                  outlier.shape = 21)+
-    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25)
+    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25, size = 5)
   
   }
 
@@ -167,20 +167,20 @@ addbxplt<-function(j,index2,letter,box = "yes"){
   geom_boxplot(data = subset(longdfplotting,
                              longdfplotting$earmeasuresresid==yvarnames[j]&
                                longdfplotting$plungedistinct=="Plunging"),
-               aes(x = 31, y = earmeasureval),fill= "black",col = "black", outlier.size = 2,
+               aes(x = 31, y = earmeasureval),fill= "black",col = "black", outlier.size = 3,
                outlier.fill = "#000000", outlier.shape = 21, width = 2.25, outlier.color = "black")+
 
     geom_boxplot(data = subset(longdfplotting,
                              longdfplotting$earmeasuresresid==yvarnames[j]&
                                longdfplotting$plungedistinct=="Underwater pursuit"),
-               aes(x = 28.5, y = earmeasureval),fill ="#56B4E9",col = "black", outlier.size = 2,
+               aes(x = 28.5, y = earmeasureval),fill ="#56B4E9",col = "black", outlier.size = 3,
                outlier.fill = "#56B4E9", outlier.shape = 21, width = 2.25, outlier.color = "black")+
     
     geom_boxplot(data = subset(longdfplotting,
                                longdfplotting$earmeasuresresid==yvarnames[j]&
                                  longdfplotting$plungedistinct=="Surface"),
                  mapping = aes(x = 33.5, y = earmeasureval), fill = "#E69F00",col = "black", 
-                 outlier.size = 2, outlier.fill = "#E69F00", width = 2.25, outlier.shape = 21, outlier.color = "black")
+                 outlier.size = 3, outlier.fill = "#E69F00", width = 2.25, outlier.shape = 21, outlier.color = "black")
   
     
   d
@@ -188,7 +188,7 @@ addbxplt<-function(j,index2,letter,box = "yes"){
 
 
 
-#####################plots for interaural canal an interbullar passage#######333
+#####################plots for interaural canal an interbullar passage#######
 #data for plotting by order
 summ2<-avgdf %>% group_by(Order,IBP_detail) %>% count(na.omit = T) 
 summ2$IBP_detail<-ifelse(summ2$IBP_detail=="Pneumaticity present"|
@@ -296,7 +296,7 @@ IAC<-function(letter){
           axis.text.x = element_text(angle = 90, colour = "black"),
           legend.position = "none",
           plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))  +
-    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25)
+    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25, size = 5)
    # geom_text(aes(x=Inf,y=-Inf,vjust = 1,
    #               hjust = -1,label=letter))
   
@@ -316,7 +316,7 @@ IACfull<-function(letter){
              aes(x = 31, fill = IAC_detail),col = "black", position = "fill",width = 2.25)+
     geom_col(data = summpl2_[summpl2_$plungedistinct=="Surface",],
              aes(x = 33.5, fill = IAC_detail),col = "black", position = "fill",width = 2.25)+
-    annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25)
+    annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25, size = 5)
   
 }
 IACfull("m")
@@ -325,10 +325,10 @@ IACfull("m")
 ###################Plot all together#######################
 (gg_tr|addbxplt(1,1,"i")+addbxplt(2,2,"ii")|
   addbxplt(3,3,"iii")+addbxplt(4,4,"iv")|#
-  addbxplt(5,5,"v")+addbxplt(6,6,"vi")|gg_tr_rev)
-/
-/#umbo height and TM angle
+  addbxplt(5,5,"v")+addbxplt(6,6,"vi"))
+
+#umbo height and TM angle
 (gg_tr|addbxplt(8,8,"vii")+addbxplt(9,9,"viii", box = "no")|#ESlength & RW 
   addbxplt(7,7,"ix")+addbxplt(11,11,"x")|#CA and collenght
   addbxplt(12,12,"xi", box = "no")+addbxplt(10,10,"xii")|#colvol and air
-  IACfull("xiii")+IBPfull("xiv")|gg_tr_rev)
+  IACfull("xiii")+IBPfull("xiv"))

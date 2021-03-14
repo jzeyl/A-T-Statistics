@@ -1,6 +1,6 @@
 pgls_todo_hm<-pgls_todo_nogeomet[seq(2,length(pgls_todo_nogeomet),2)]
 
-#Model list with head mass as only independent variable
+#model list with head mass as only independent variable
 modellist<-pgls_todo_hm
 pgls_models_list<-lapply(pgls_todo_hm,pgls_models)#run pgls
 
@@ -25,16 +25,7 @@ for(i in seq_along(tbllist_HM)){
   character_cols<-unlist(lapply(tbllist_HM[[i]], is.character))
   numeric_cols <- unlist(lapply(tbllist_HM[[i]], is.numeric))# Identify numeric columns
   tbllist_HM[[i]]<-cbind(tbllist_HM[[i]][,which(character_cols)],signif(tbllist_HM[[i]][,which(numeric_cols)], digits = 2))
-  #tbllist_HM[[i]] <- tbllist_HM[[i]][, c(6,11,8:10,7,5,1:4)]#change order of columns
-  #dplyr::select_if(tbllist_HM[[i]], is.numeric)#select only numeric data
-  colnames(tbllist_HM[[i]])[6]<-"P.val"#rename b/c flextable doesn't work will with the '>' sign
-  #tbllist_HM[[i]]$Fstat[2:nrow(tbllist_HM[[i]])]<-""
-  #tbllist_HM[[i]]$Fstat_numdf[2:nrow(tbllist_HM[[i]])]<-""
-  #tbllist_HM[[i]]$Fstat_dendf[2:nrow(tbllist_HM[[i]])]<-" "
-  ##tbllist_HM[[i]]$Model[2:nrow(tbllist_HM[[i]])]<-""
-  #tbllist_HM[[i]]$Lambda[2:nrow(tbllist_HM[[i]])]<-""
-  #tbllist_HM[[i]]$Adj_Rsquared[2:nrow(tbllist_HM[[i]])]<-""
-  #tbllist_HM[[i]]$AICc[2:nrow(tbllist_HM[[i]])]<-""
-  row.names(tbllist_HM[[i]])<-c()#remove row names
+    colnames(tbllist_HM[[i]])[6]<-"P.val"#rename b/c flextable doesn't work will with the '>' sign
+    row.names(tbllist_HM[[i]])<-c()#remove row names
   print(tbllist_HM[[i]])
 }
