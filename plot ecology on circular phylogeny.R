@@ -127,12 +127,20 @@ ggsave("D:/Analysis_plots/ecolcircle.pdf", width=10, height=10)
 #############plot heatmap showing sampling of all auditory traits (supplemental materials)#####333
 avgdf$Binomial2<-avgdf$Binomial
 
+avgdf$Binomial3<-gsub("_"," ",avgdf$Binomial2)
+
+
+library(ggtext)
 a<-ggtree(birdtreels) %<+% avgdf + ###########, layout = "circular"
-  geom_tiplab(aes(label = Binomial2), linesize = 0.1, offset = 30) + #circular
+  geom_tiplab(aes(label= Binomial3), linesize = 0.01, offset = 30)+
+  #geom_tiplab(aes(label=paste0('italic(', Binomial2,')')), 
+  #          parse=TRUE, linesize = 0.01, offset = 30)+
   #geom_text(aes(label = node))+
   xlim(NA, 160) + 
   ylim(NA,140) 
 a  
+
+
 
 avgdf$IACN<-ifelse(avgdf$IAC_detail=="",0,1)
 avgdf$IBPN<-ifelse(avgdf$IBP_detail=="",0,1)
