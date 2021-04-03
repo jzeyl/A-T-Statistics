@@ -1,6 +1,6 @@
 
 # A-T-Statistics
-[![DOI](https://zenodo.org/badge/313591727.svg)](https://zenodo.org/badge/latestdoi/313591727)
+[![DOI](https://zenodo.org/badge/313591727.svg)](https://doi.org/10.5281/zenodo.4587146)
 ## 1. Data files
 There are three data files:  
 >**Main dataframe:**  "Eardata.csv"    
