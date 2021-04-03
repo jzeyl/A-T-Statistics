@@ -19,7 +19,7 @@ p<-ggplot(d, aes(x = reorder(PC1,-percentexplained), y = percentexplained))+
   ylab("Percent variance \n explained")
 p
 
-#remove lavels for inset plot
+#remove labels for inset plot
 p<-ggplot(d[1:6,], aes(x = reorder(PC1,-percentexplained), y = percentexplained))+
   geom_bar(stat = "identity")+
   theme_classic()+
@@ -30,19 +30,6 @@ p<-ggplot(d[1:6,], aes(x = reorder(PC1,-percentexplained), y = percentexplained)
         panel.background = element_blank(),
         panel.grid = element_blank())
 p
-
-
-themejz<-function (base_size = 11, base_family = "", base_line_size = base_size/22, 
-                   base_rect_size = base_size/22) 
-{
-  theme_grey(base_size = base_size, base_family = base_family, 
-             base_line_size = base_line_size, base_rect_size = base_rect_size) %+replace% 
-    theme(panel.background = element_blank(), panel.border = element_rect(), panel.grid = element_line(), 
-          panel.grid.minor = element_blank(), 
-          strip.background = element_rect(fill = "grey85", 
-                                          colour = "grey20"), legend.key = element_rect(fill = "white", 
-                                                                                        colour = NA), complete = TRUE)
-}
 
 
 
@@ -285,7 +272,7 @@ loadings2<-loadings1 + annotation_custom(ggplotGrob(p),
                        ymin = 0, ymax = 1)
 loadings2
 
-ggarrange(loadings2,plunge,divescore, order,
+ggarrange(loadings1,plunge,divescore, order,
           labels = c("A","B","C","D"))
 
 ggsave("D:/00_Manuscripts/0Avian aquatic hearing project/___Oct 1 version/PCAOct 4_noair.pdf",width = 10, height = 10)

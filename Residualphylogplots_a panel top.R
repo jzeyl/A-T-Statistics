@@ -1,5 +1,4 @@
-#Plotting adapted from:
-#https://thackl.github.io/ggtree-composite-plots
+#Plotting adapted from: https://thackl.github.io/ggtree-composite-plots
 library(patchwork)
 library(viridis)
 
@@ -85,8 +84,8 @@ annotate("text", x = 13,y = 36,label = "Terrestrial")+
   annotate("text", x = 13,y = 33.5,label = "Surface-foraging")+
   annotate("text", x = 13,y = 31,label = "Plunge-diving")+
   annotate("text", x = 13,y = 28.5,label = "Underwater-pursuit")+
-  annotate("text", x = 1,y = 38,label = "A")+
-  annotate("text", x = 1,y = 26,label = "B")
+  annotate("text", x = 1,y = 38,label = "A", size = 8)+
+  annotate("text", x = 1,y = 26,label = "B", size = 8)
 gg_tr
 
 #reversed phylogenetic tree
@@ -108,7 +107,7 @@ gg_plungedistinct<-function(index2, letter, box = "yes"){
   ggtreeplot(gg_tr, subset(longdfplotting,
                            longdfplotting$earmeasuresresid==yvarnames[index2]), aes(y=earmeasureval), flip=TRUE)  +{
     
-    if(box == "yes")   annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25, size = 5)
+    if(box == "yes")   annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25, size = 8)
  else annotate("text",x = Inf, y = Inf, label = "", hjust = 2, vjust = 1.25)
     } +
    #geom_label(aes(x=Inf,y=-Inf,vjust = 1,
@@ -142,7 +141,7 @@ gg_plungedistinct<-function(index2, letter, box = "yes"){
                  aes(x = 36, y = earmeasureval),fill= "white", col = "black", outlier.size = 3,
                  outlier.colour = "black", width = 2.25, outlier.fill = "white",
                  outlier.shape = 21)+
-    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25, size = 5)
+    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25, size = 8)
   
   }
 
@@ -231,7 +230,7 @@ IBP<-function(letter){
           axis.text.x = element_text(angle = 90, colour = "black"),
           legend.position = "none",
           plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))+
-    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25)
+    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25, size = 8)
   
   
   d
@@ -249,7 +248,7 @@ IBPfull<-function(letter){
              aes(x = 31, fill = IBP_detail),col = "black", position = "fill",width = 2.25)+
     geom_col(data = summpl_[summpl_$plungedistinct=="Surface",],
              aes(x = 33.5, fill = IBP_detail),col = "black", position = "fill",width = 2.25)+
-    annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25)
+    annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25, size = 8)
 }
 IBPfull("l")
 
@@ -296,7 +295,7 @@ IAC<-function(letter){
           axis.text.x = element_text(angle = 90, colour = "black"),
           legend.position = "none",
           plot.margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt"))  +
-    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25, size = 5)
+    annotate("text",x = Inf, y = -Inf, label = letter,hjust = -1,vjust = 1.25, size = 8)
    # geom_text(aes(x=Inf,y=-Inf,vjust = 1,
    #               hjust = -1,label=letter))
   
@@ -316,7 +315,7 @@ IACfull<-function(letter){
              aes(x = 31, fill = IAC_detail),col = "black", position = "fill",width = 2.25)+
     geom_col(data = summpl2_[summpl2_$plungedistinct=="Surface",],
              aes(x = 33.5, fill = IAC_detail),col = "black", position = "fill",width = 2.25)+
-    annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25, size = 5)
+    annotate("text",x = Inf, y = Inf, label = "*", hjust = 2, vjust = 1.25, size = 8)
   
 }
 IACfull("m")
@@ -332,3 +331,11 @@ IACfull("m")
   addbxplt(7,7,"ix")+addbxplt(11,11,"x")|#CA and collenght
   addbxplt(12,12,"xi", box = "no")+addbxplt(10,10,"xii")|#colvol and air
   IACfull("xiii")+IBPfull("xiv"))
+
+(gg_tr|addbxplt(1,1,"i")+addbxplt(2,2,"ii")|
+    addbxplt(3,3,"iii")+addbxplt(4,4,"iv")|#
+    addbxplt(5,5,"v")+addbxplt(6,6,"vi")|
+    addbxplt(8,8,"vii")+addbxplt(9,9,"viii", box = "no")|#ESlength & RW 
+    addbxplt(7,7,"ix")+addbxplt(11,11,"x")|#CA and collenght
+    addbxplt(12,12,"xi", box = "no")+addbxplt(10,10,"xii")|#colvol and air
+    IACfull("xiii")+IBPfull("xiv"))
