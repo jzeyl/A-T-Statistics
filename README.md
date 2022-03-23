@@ -14,13 +14,14 @@ The column names of the main dataframe are described in **"columnnames.csv"**
 
 ## 2. Setting up the analyses
 The **"Set up data.R"**. script loads the dataframes with auditory measurements, the phylogeny, and the dive depth dataset. The last section of the script sets up the data for aquatic-only analyses. The script calls other script files:
+| File name | Purpose |
+| ------------- | ------------- |
+|"SW_HW_.R" |   Computes the regression to interpolate head mass for a few species of unknown head mass|  
+|"load phylogeny and make CDO.R" | Loads the phylogeny and make a 'comparative data object'  |
+|"add_dive_depth_data.R" | Joins the dive data into the main dataframe|
 
->"SW_HW_.R"    (Computes the regression to interpolate head mass for a few species of unknown head mass)  
->"load phylogeny and make CDO.R"  (Loads the phylogeny and make a 'comparative data object')  
->"add_dive_depth_data.R"  (Joins the dive data into the main dataframe)
 
-
-## 3. Phylogenetic principal components (pPCA) analses
+## 3. Phylogenetic principal components (pPCA) analyses
 The **"Run phyPCA.R"** script run the pPCAs and **"Plot PCA.R"** plots the pPCA results.  **"Run phyPCA.R"** calls **"Extract pgls residuals.R"** to get the residuals used as input for the pPCA.  
  
 
