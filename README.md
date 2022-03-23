@@ -1,5 +1,6 @@
 
 # A-T-Statistics
+This repository is a complement to an article to be published in Scientific Reports. The permanent doi is here 
 [![DOI](https://zenodo.org/badge/313591727.svg)](https://doi.org/10.5281/zenodo.4587146)
 ## 1. Data files
 There are three data files:  
