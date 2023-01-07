@@ -1,6 +1,6 @@
 
-# A-T-Statistics
-This repository is a complement to an article to be published in Scientific Reports. The permanent doi is here 
+# Zeyl et al 2022 Statistics Scripts
+This repository includes R scripts for statistical analysis and is a complement to an article published in [Scientific Reports](https://www.nature.com/articles/s41598-022-09090-3). The permanent doi is here 
 [![DOI](https://zenodo.org/badge/313591727.svg)](https://doi.org/10.5281/zenodo.4587146)
 ## 1. Data files
 There are three data files:  
